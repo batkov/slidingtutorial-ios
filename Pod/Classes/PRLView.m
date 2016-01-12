@@ -69,27 +69,6 @@
             [self.scrollView addSubview:view];
         }
         
-        //--- configure bottom skip view
-        UIView *skipView = [[UIView alloc] initWithFrame:CGRectMake(0, SCREEN_HEIGHT - kHeightSkipView, SCREEN_WIDTH, kHeightSkipView)];
-        UIView *lineView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, SCREEN_WIDTH *2, 1)];
-        [lineView setBackgroundColor:[UIColor colorWithRed:0.90 green:0.90 blue:0.90 alpha:1]];
-        [skipView addSubview:lineView];
-        
-        UIButton *button = [[UIButton alloc] initWithFrame:CGRectMake(15, 0, 70, 40)];
-        [button setTitle:@"Skip" forState:UIControlStateNormal];
-        [button addTarget:self action:@selector(skipPressed:) forControlEvents:UIControlEventTouchUpInside];
-        [skipView addSubview:button];
-        [self addSubview:skipView];
-        
-        UIPageControl *pageControl = [UIPageControl new];
-        pageControl.numberOfPages = pageCount;
-        pageControl.center = CGPointMake(SCREEN_WIDTH / 2, kHeightSkipView /2);
-        [skipView addSubview:pageControl];
-        self.pageControl = pageControl;
-        
-        self.skipView = skipView;
-        //---
-        
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(deviceOrientationChanged:) name:UIDeviceOrientationDidChangeNotification object:nil];
     }
     return  self;
@@ -128,6 +107,7 @@
 
 - (void)prepareForShow;
 {
+    [self createSkipView];
     if (self.arrayOfBackgroundColors.count -1 < self.arrayOfPages.count) {
         if (self.loggingEnabled) {
             NSLog(@"Wrong count of background colors. Should be %lu instead of %lu", (unsigned long)self.arrayOfPages.count, self.arrayOfBackgroundColors.count -1);
@@ -142,6 +122,34 @@
                                         secondColor:self.arrayOfBackgroundColors[1]
                                              offset:0];
     [self.scrollView setBackgroundColor:mixedColor];
+}
+
+- (void)createSkipView
+{
+    UIView *skipView = [[UIView alloc] initWithFrame:CGRectMake(0, SCREEN_HEIGHT - kHeightSkipView, SCREEN_WIDTH, kHeightSkipView)];
+    UIView *lineView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, SCREEN_WIDTH *2, 1)];
+    [lineView setBackgroundColor:[UIColor colorWithRed:0.90 green:0.90 blue:0.90 alpha:1]];
+    [skipView addSubview:lineView];
+    
+    UIPageControl *pageControl = [UIPageControl new];
+    pageControl.numberOfPages = [self.arrayOfPages count];
+    pageControl.center = CGPointMake(SCREEN_WIDTH / 2, kHeightSkipView /2);
+    [skipView addSubview:pageControl];
+    self.pageControl = pageControl;
+    
+    self.skipView = skipView;
+    NSString *skipTitle = nil;
+    if ([self.delegate respondsToSelector:@selector(skipButtonTitle)]) {
+        skipTitle = [self.delegate skipButtonTitle];
+    }
+    if (!skipTitle) {
+        skipTitle = @"Skip";
+    }
+    UIButton *button = [[UIButton alloc] initWithFrame:CGRectMake(15, 0, 70, 40)];
+    [button setTitle:skipTitle forState:UIControlStateNormal];
+    [button addTarget:self action:@selector(skipPressed:) forControlEvents:UIControlEventTouchUpInside];
+    [skipView addSubview:button];
+    [self addSubview:skipView];
 }
 
 #pragma mark - UIScrollView delegate

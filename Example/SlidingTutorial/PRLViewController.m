@@ -31,6 +31,10 @@
     [self.viewParallax removeFromSuperview];
 }
 
+- (NSString *)skipButtonTitle {
+    return @"Skip!";
+}
+
 #pragma mark - IBActions
 
 - (IBAction)actionTryAgain:(id)sender {

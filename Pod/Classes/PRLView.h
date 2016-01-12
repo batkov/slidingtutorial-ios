@@ -15,6 +15,9 @@
  */
 - (void)skipTutorial;
 
+@optional
+- (NSString *)skipButtonTitle;
+
 @end
 
 @interface PRLView : UIView
