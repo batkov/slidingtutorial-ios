@@ -166,8 +166,8 @@
     
     self.skipView = skipView;
     NSString *skipTitle = nil;
-    if ([self.delegate respondsToSelector:@selector(skipButtonTitle)]) {
-        skipTitle = [self.delegate skipButtonTitle];
+    if ([self.delegate respondsToSelector:@selector(skipButtonTitleForView:)]) {
+        skipTitle = [self.delegate skipButtonTitleForView:self];
     }
     if (!skipTitle) {
         skipTitle = @"Skip";
@@ -291,8 +291,8 @@
 }
 
 - (void)skipPressed:(id)sender {
-    if ([self.delegate respondsToSelector:@selector(skipTutorial)]) {
-        [self.delegate skipTutorial];
+    if ([self.delegate respondsToSelector:@selector(skipTutorialTappedOnView:)]) {
+        [self.delegate skipTutorialTappedOnView:self];
     }
 }
 

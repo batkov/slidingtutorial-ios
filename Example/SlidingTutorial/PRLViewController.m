@@ -27,11 +27,11 @@
 
 #pragma mark - PRLViewProtocol
 
-- (void)skipTutorial {
+- (void)skipTutorialTappedOnView:(PRLView *)view {
     [self.viewParallax removeFromSuperview];
 }
 
-- (NSString *)skipButtonTitle {
+- (NSString *)skipButtonTitleForView:(PRLView *)view {
     return @"Skip!";
 }
 

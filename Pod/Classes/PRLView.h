@@ -8,15 +8,17 @@
 
 #import <UIKit/UIKit.h>
 
+@class PRLView;
+
 @protocol PRLViewProtocol <NSObject>
 
+@optional
 /**
  This method calls when Skip button action pressed
  */
-- (void)skipTutorial;
+- (void)skipTutorialTappedOnView:(PRLView *) view;
 
-@optional
-- (NSString *)skipButtonTitle;
+- (NSString *)skipButtonTitleForView:(PRLView *) view;
 
 @end
 
