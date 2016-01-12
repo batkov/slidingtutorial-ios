@@ -12,6 +12,10 @@
 #define SCREEN_HEIGHT [UIScreen mainScreen].bounds.size.height
 
 extern CGFloat const kHeightSkipView;
+typedef NS_ENUM(NSInteger, PRLElementType) {
+    PRLElementTypeImage,
+    PRLElementTypeText,
+};
 
 @interface PRLElementView : UIView
 
@@ -20,6 +24,8 @@ extern CGFloat const kHeightSkipView;
 @property (nonatomic, readonly) CGFloat offsetY;
 @property (nonatomic, readonly) NSInteger pageNumber;
 @property (nonatomic, readonly) NSString *imageName;
+@property (nonatomic, readonly) NSString *title;
+@property (nonatomic, readonly) PRLElementType type;
 
 - (instancetype)initWithImageName:(NSString *)imageName
                           offsetX:(CGFloat)offsetX
@@ -28,5 +34,13 @@ extern CGFloat const kHeightSkipView;
               slippingCoefficient:(CGFloat)slippingCoefficient
                  scaleCoefficient:(CGFloat)scaleCoefficient
                    loggingEnabled:(BOOL)loggingEnabled;
+
+- (instancetype)initWithTitle:(NSString *)title
+                      offsetX:(CGFloat)offsetX
+                      offsetY:(CGFloat)offsetY
+                   pageNumber:(NSInteger)pageNumber
+          slippingCoefficient:(CGFloat)slippingCoefficient
+             scaleCoefficient:(CGFloat)scaleCoefficient
+               loggingEnabled:(BOOL)loggingEnabled;
 
 @end

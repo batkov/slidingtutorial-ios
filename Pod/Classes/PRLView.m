@@ -30,7 +30,7 @@
 #pragma mark - Public
 
 - (instancetype)initWithPageCount:(NSInteger)pageCount
-                 scaleCoefficient:(CGFloat)scaleCoefficient
+                 scaleCoefficient:(CGFloat)scaleCoefficient;
 {
     return [self initWithPageCount:pageCount
                   scaleCoefficient:scaleCoefficient
@@ -39,11 +39,11 @@
 
 - (instancetype)initWithPageCount:(NSInteger)pageCount
                  scaleCoefficient:(CGFloat)scaleCoefficient
-                   loggingEnabled:(BOOL)loggingEnabled
+                   loggingEnabled:(BOOL)loggingEnabled;
 {
     if (pageCount <= 0) {
         if (loggingEnabled) {
-            NSLog(@"Wrong page count %li. It should be at least 1", (long)pageCount);
+            NSLog(@"PRLView: Wrong page count %li. It should be at least 1", (long)pageCount);
         }
         return nil;
     }
@@ -82,7 +82,7 @@
 {
     if (pageNum >= self.arrayOfPages.count || pageNum < 0) {
         if (self.loggingEnabled) {
-            NSLog(@"Wrong page number %lu Range of pages should be from 0 to %lu", (long)pageNum, self.arrayOfPages.count -1);
+            NSLog(@"PRLView: Wrong page number %lu Range of pages should be from 0 to %lu", (long)pageNum, self.arrayOfPages.count -1);
         }
         return;
     }
@@ -100,6 +100,33 @@
     }
 }
 
+- (void)addElementWithTitle:(NSString *)title
+                    offsetX:(CGFloat)offsetX
+                    offsetY:(CGFloat)offsetY
+        slippingCoefficient:(CGFloat)slippingCoefficient
+                    pageNum:(NSInteger)pageNum;
+{
+    
+    if (pageNum >= self.arrayOfPages.count || pageNum < 0) {
+        if (self.loggingEnabled) {
+            NSLog(@"PRLView: Wrong page number %lu Range of pages should be from 0 to %lu", (long)pageNum, self.arrayOfPages.count -1);
+        }
+        return;
+    }
+    
+    PRLElementView *viewSlip = [[PRLElementView alloc] initWithTitle:title
+                                                             offsetX:offsetX
+                                                             offsetY:offsetY
+                                                          pageNumber:pageNum
+                                                 slippingCoefficient:slippingCoefficient
+                                                    scaleCoefficient:self.scaleCoefficient
+                                                      loggingEnabled:self.loggingEnabled];
+    if (viewSlip) {
+        [self.arrayOfPages[pageNum] addSubview:viewSlip];
+        [self.arrayOfElements addObject:viewSlip];
+    }
+}
+
 - (void)addBackgroundColor:(UIColor *)color;
 {
     [self.arrayOfBackgroundColors insertObject:color atIndex:self.arrayOfBackgroundColors.count -1];
@@ -110,8 +137,8 @@
     [self createSkipView];
     if (self.arrayOfBackgroundColors.count -1 < self.arrayOfPages.count) {
         if (self.loggingEnabled) {
-            NSLog(@"Wrong count of background colors. Should be %lu instead of %lu", (unsigned long)self.arrayOfPages.count, self.arrayOfBackgroundColors.count -1);
-            NSLog(@"The missing colors will be replaced by white");
+            NSLog(@"PRLView: Wrong count of background colors. Should be %lu instead of %lu", (unsigned long)self.arrayOfPages.count, self.arrayOfBackgroundColors.count -1);
+            NSLog(@"PRLView: The missing colors will be replaced by white");
         }
         while (self.arrayOfBackgroundColors.count < self.arrayOfPages.count) {
             [self.arrayOfBackgroundColors addObject:[UIColor whiteColor]];
@@ -124,7 +151,7 @@
     [self.scrollView setBackgroundColor:mixedColor];
 }
 
-- (void)createSkipView
+- (void)createSkipView;
 {
     UIView *skipView = [[UIView alloc] initWithFrame:CGRectMake(0, SCREEN_HEIGHT - kHeightSkipView, SCREEN_WIDTH, kHeightSkipView)];
     UIView *lineView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, SCREEN_WIDTH *2, 1)];
@@ -225,13 +252,24 @@
         PRLElementView *view = self.arrayOfElements[i];
         [view removeFromSuperview];
         
-        PRLElementView *viewSlip = [[PRLElementView alloc] initWithImageName:view.imageName
-                                                                     offsetX:view.offsetX
-                                                                     offsetY:view.offsetY
-                                                                  pageNumber:view.pageNumber
-                                                         slippingCoefficient:view.slippingCoefficient
-                                                            scaleCoefficient:self.scaleCoefficient
-                                                              loggingEnabled:self.loggingEnabled];
+        PRLElementView *viewSlip = nil;
+        if (view.type == PRLElementTypeImage) {
+            viewSlip = [[PRLElementView alloc] initWithImageName:view.imageName
+                                                         offsetX:view.offsetX
+                                                         offsetY:view.offsetY
+                                                      pageNumber:view.pageNumber
+                                             slippingCoefficient:view.slippingCoefficient
+                                                scaleCoefficient:self.scaleCoefficient
+                                                  loggingEnabled:self.loggingEnabled];
+        } else if (view.type == PRLElementTypeText) {
+            viewSlip = [[PRLElementView alloc] initWithTitle:view.title
+                                                     offsetX:view.offsetX
+                                                     offsetY:view.offsetY
+                                                  pageNumber:view.pageNumber
+                                         slippingCoefficient:view.slippingCoefficient
+                                            scaleCoefficient:self.scaleCoefficient
+                                              loggingEnabled:self.loggingEnabled];
+        }
         
         if (viewSlip) {
             [self.arrayOfPages[viewSlip.pageNumber] addSubview:viewSlip];

@@ -61,6 +61,20 @@
        slippingCoefficient:(CGFloat)slippingCoefficient
                    pageNum:(NSInteger)pageNum;
 
+/**
+ Calls for adding text onto sliding page
+ 
+ @param title - text to display.
+ @param offsetX and offsetY - layer offset from the center of the screen. If you send offsetX:0 offsetY:0 your text layer will be placed exactly in the center of the screen. Dot (0,0) in this coords system situated in the center of the screen in all device orientations.
+ @param slippingCoefficient - ratio bound to scroll offset in scroll view. For 1 pixel content offset of scroll view layer will be slipping for 1 * slippingCoefficient (so if slippingCoefficient == 0.3, it will be equal 0.3px). Sign determines the direction of slipping - left or right.
+ @param pageNum - the page number on which you will add this text layer.
+ */
+- (void)addElementWithTitle:(NSString *)title
+                    offsetX:(CGFloat)offsetX
+                    offsetY:(CGFloat)offsetY
+        slippingCoefficient:(CGFloat)slippingCoefficient
+                    pageNum:(NSInteger)pageNum;
+
 
 /**
  Calls for adding background colors for all your tutorial pages

@@ -65,7 +65,8 @@
     [viewParallax addElementWithName:@"elem00-08" offsetX:135 offsetY:-125 slippingCoefficient:0.1 pageNum:0];
     [viewParallax addElementWithName:@"elem00-09" offsetX:135 offsetY:-80 slippingCoefficient:0.2 pageNum:0];
     [viewParallax addElementWithName:@"elem00-10" offsetX:-150 offsetY:-85 slippingCoefficient:-0.15 pageNum:0];
-    [viewParallax addElementWithName:@"elem00-11" offsetX:0 offsetY:170 slippingCoefficient:0.05 pageNum:0];
+    //[viewParallax addElementWithName:@"elem00-11" offsetX:0 offsetY:170 slippingCoefficient:0.05 pageNum:0];
+    [viewParallax addElementWithTitle:@"WEB SEO" offsetX:0 offsetY:170 slippingCoefficient:0.05 pageNum:0];
     
     [viewParallax addElementWithName:@"elem01-07" offsetX:0 offsetY:0 slippingCoefficient:-0.05 pageNum:1];
     [viewParallax addElementWithName:@"elem01-00" offsetX:-145 offsetY:35 slippingCoefficient:0.2 pageNum:1];
