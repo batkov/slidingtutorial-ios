@@ -27,11 +27,14 @@ CGFloat const kHeightSkipView = 40.;
                           offsetY:(CGFloat)offsetY
                        pageNumber:(NSInteger)pageNumber
               slippingCoefficient:(CGFloat)slippingCoefficient
-                 scaleCoefficient:(CGFloat)scaleCoefficient;
+                 scaleCoefficient:(CGFloat)scaleCoefficient
+                   loggingEnabled:(BOOL)loggingEnabled
 {
     UIImage *image = [UIImage imageNamed:imageName];
     if (!image) {
-        NSLog(@"No image with name %@ loaded",imageName);
+        if (loggingEnabled) {
+            NSLog(@"No image with name %@ loaded",imageName);
+        }
         return nil;
     }
     
@@ -40,7 +43,7 @@ CGFloat const kHeightSkipView = 40.;
     [image drawInRect:CGRectMake(0,0,destinationSize.width,destinationSize.height)];
     UIImage *resizedImage = UIGraphicsGetImageFromCurrentImageContext();
     UIGraphicsEndImageContext();
-   
+    
     UIImageView *imageView = [[UIImageView alloc] initWithImage:resizedImage];
     
     CGFloat postionX = (SCREEN_WIDTH - resizedImage.size.width) / 2;

@@ -26,6 +26,7 @@ extern CGFloat const kHeightSkipView;
                           offsetY:(CGFloat)offsetY
                        pageNumber:(NSInteger)pageNumber
               slippingCoefficient:(CGFloat)slippingCoefficient
-                 scaleCoefficient:(CGFloat)scaleCoefficient;
+                 scaleCoefficient:(CGFloat)scaleCoefficient
+                   loggingEnabled:(BOOL)loggingEnabled;
 
 @end

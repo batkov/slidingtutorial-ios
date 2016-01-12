@@ -11,13 +11,15 @@
 @protocol PRLViewProtocol <NSObject>
 
 /**
-    This method calls when Skip button action pressed
-*/
+ This method calls when Skip button action pressed
+ */
 - (void)skipTutorial;
 
 @end
 
 @interface PRLView : UIView
+
+@property (assign, nonatomic) BOOL loggingEnabled; // Default is NO. 
 
 @property (weak, nonatomic) id <PRLViewProtocol> delegate;
 
@@ -29,6 +31,17 @@
  */
 - (instancetype)initWithPageCount:(NSInteger)pageCount
                  scaleCoefficient:(CGFloat)scaleCoefficient;
+
+/**
+ Calls for instantiating Slipping Tutorial view
+ 
+ @param pageCount - a count of pages in tutorial and second parameter is a coefficient of scaling images (put 1.0 if you don't need scale and images will displaying in a full size).
+ @param scaleCoefficient - is a coefficient of scaling images (put 1.0 if you don't need scale and images will displaying in a full size).
+ @param loggingEnabled - is a flag to enable or disable logging.
+ */
+- (instancetype)initWithPageCount:(NSInteger)pageCount
+                 scaleCoefficient:(CGFloat)scaleCoefficient
+                   loggingEnabled:(BOOL)loggingEnabled;
 
 
 /**
@@ -54,7 +67,7 @@
 
 
 /**
-  Call this method after you finished preparing Sliding Tutorial view.
+ Call this method after you finished preparing Sliding Tutorial view.
  */
 - (void)prepareForShow;
 

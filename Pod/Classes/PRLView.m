@@ -30,14 +30,26 @@
 #pragma mark - Public
 
 - (instancetype)initWithPageCount:(NSInteger)pageCount
-                 scaleCoefficient:(CGFloat)scaleCoefficient;
+                 scaleCoefficient:(CGFloat)scaleCoefficient
+{
+    return [self initWithPageCount:pageCount
+                  scaleCoefficient:scaleCoefficient
+                    loggingEnabled:NO];
+}
+
+- (instancetype)initWithPageCount:(NSInteger)pageCount
+                 scaleCoefficient:(CGFloat)scaleCoefficient
+                   loggingEnabled:(BOOL)loggingEnabled
 {
     if (pageCount <= 0) {
-        NSLog(@"Wrong page count %li. It should be at least 1", (long)pageCount);
+        if (loggingEnabled) {
+            NSLog(@"Wrong page count %li. It should be at least 1", (long)pageCount);
+        }
         return nil;
     }
     
     if ((self = [super initWithFrame:[UIScreen mainScreen].bounds])) {
+        self.loggingEnabled = loggingEnabled;
         self.arrayOfElements = [NSMutableArray new];
         self.arrayOfPages = [NSMutableArray new];
         self.arrayOfBackgroundColors = [NSMutableArray new];
@@ -90,16 +102,19 @@
                    pageNum:(NSInteger)pageNum;
 {
     if (pageNum >= self.arrayOfPages.count || pageNum < 0) {
-        NSLog(@"Wrong page number %lu Range of pages should be from 0 to %u",(long)pageNum, self.arrayOfPages.count -1);
+        if (self.loggingEnabled) {
+            NSLog(@"Wrong page number %lu Range of pages should be from 0 to %lu", (long)pageNum, self.arrayOfPages.count -1);
+        }
         return;
     }
     
     PRLElementView *viewSlip = [[PRLElementView alloc] initWithImageName:elementName
-                                                                     offsetX:offsetX
-                                                                     offsetY:offsetY
-                                                                  pageNumber:pageNum
+                                                                 offsetX:offsetX
+                                                                 offsetY:offsetY
+                                                              pageNumber:pageNum
                                                      slippingCoefficient:slippingCoefficient
-                                                        scaleCoefficient:self.scaleCoefficient];
+                                                        scaleCoefficient:self.scaleCoefficient
+                                                          loggingEnabled:self.loggingEnabled];
     if (viewSlip) {
         [self.arrayOfPages[pageNum] addSubview:viewSlip];
         [self.arrayOfElements addObject:viewSlip];
@@ -114,8 +129,10 @@
 - (void)prepareForShow;
 {
     if (self.arrayOfBackgroundColors.count -1 < self.arrayOfPages.count) {
-        NSLog(@"Wrong count of background colors. Should be %lu instead of %u", (unsigned long)self.arrayOfPages.count, self.arrayOfBackgroundColors.count -1);
-        NSLog(@"The missing colors will be replaced by white");
+        if (self.loggingEnabled) {
+            NSLog(@"Wrong count of background colors. Should be %lu instead of %lu", (unsigned long)self.arrayOfPages.count, self.arrayOfBackgroundColors.count -1);
+            NSLog(@"The missing colors will be replaced by white");
+        }
         while (self.arrayOfBackgroundColors.count < self.arrayOfPages.count) {
             [self.arrayOfBackgroundColors addObject:[UIColor whiteColor]];
         }
@@ -205,7 +222,8 @@
                                                                      offsetY:view.offsetY
                                                                   pageNumber:view.pageNumber
                                                          slippingCoefficient:view.slippingCoefficient
-                                                            scaleCoefficient:self.scaleCoefficient];
+                                                            scaleCoefficient:self.scaleCoefficient
+                                                              loggingEnabled:self.loggingEnabled];
         
         if (viewSlip) {
             [self.arrayOfPages[viewSlip.pageNumber] addSubview:viewSlip];
