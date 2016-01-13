@@ -298,7 +298,7 @@
     if (self.lastScreenWidth == 0) { //first launch setup
         self.lastScreenWidth = screenWidth;
     }
-    
+    self.frame = CGRectMake(0, 0, screenWidth, screenHeight);
     NSInteger currentPageNum = self.scrollView.contentOffset.x / self.lastScreenWidth;
     [self setBackgroundColor:self.scrollView.backgroundColor];
     [self.scrollView setContentOffset:CGPointMake(0, 0)]; //fix problem with inapropriate elements transtion
