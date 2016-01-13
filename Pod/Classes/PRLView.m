@@ -54,6 +54,7 @@
     }
     
     if ((self = [super initWithFrame:[UIScreen mainScreen].bounds])) {
+        self.clipsToBounds = YES;
         self.loggingEnabled = loggingEnabled;
         self.arrayOfElements = [NSMutableArray new];
         self.arrayOfPages = [NSMutableArray new];
@@ -87,7 +88,7 @@
 {
     if (pageNum >= self.arrayOfPages.count || pageNum < 0) {
         if (self.loggingEnabled) {
-            NSLog(@"PRLView: Wrong page number %lu Range of pages should be from 0 to %lu", (long)pageNum, self.arrayOfPages.count -1);
+            NSLog(@"PRLView: Wrong page number %lu Range of pages should be from 0 to %u", (long)pageNum, self.arrayOfPages.count -1);
         }
         return;
     }
@@ -114,7 +115,7 @@
     
     if (pageNum >= self.arrayOfPages.count || pageNum < 0) {
         if (self.loggingEnabled) {
-            NSLog(@"PRLView: Wrong page number %lu Range of pages should be from 0 to %lu", (long)pageNum, self.arrayOfPages.count -1);
+            NSLog(@"PRLView: Wrong page number %lu Range of pages should be from 0 to %u", (long)pageNum, self.arrayOfPages.count -1);
         }
         return;
     }
@@ -166,7 +167,7 @@
     [self updateDoneButtonVisibility];
     if (self.arrayOfBackgroundColors.count -1 < self.arrayOfPages.count) {
         if (self.loggingEnabled) {
-            NSLog(@"PRLView: Wrong count of background colors. Should be %lu instead of %lu", (unsigned long)self.arrayOfPages.count, self.arrayOfBackgroundColors.count -1);
+            NSLog(@"PRLView: Wrong count of background colors. Should be %lu instead of %u", (unsigned long)self.arrayOfPages.count, self.arrayOfBackgroundColors.count -1);
             NSLog(@"PRLView: The missing colors will be replaced by white");
         }
         while (self.arrayOfBackgroundColors.count < self.arrayOfPages.count) {
@@ -285,20 +286,29 @@
 
 - (void)deviceOrientationChanged:(NSNotification *)notification;
 {
+    CGFloat screenWidth = SCREEN_WIDTH;
+    CGFloat screenHeight = SCREEN_HEIGHT;
+    if (self.loggingEnabled) {
+        BOOL isDeviceLandscape = UIDeviceOrientationIsPortrait([notification.object orientation]);
+        BOOL isStatusLandscape = UIInterfaceOrientationIsPortrait([[UIApplication sharedApplication] statusBarOrientation]);
+        NSLog(@"PRLView: DetectedOrientationChange: %@", isDeviceLandscape ? @"Portrait" : @"Landscape");
+        NSLog(@"PRLView: Current StatusBarOrientation: %@", isStatusLandscape ? @"Portrait" : @"Landscape");
+        NSLog(@"PRLView: screenWidth: %.0f, screenHeight: %.0f", screenWidth, screenHeight);
+    }
     if (self.lastScreenWidth == 0) { //first launch setup
-        self.lastScreenWidth = SCREEN_WIDTH;
+        self.lastScreenWidth = screenWidth;
     }
     
     NSInteger currentPageNum = self.scrollView.contentOffset.x / self.lastScreenWidth;
     [self setBackgroundColor:self.scrollView.backgroundColor];
     [self.scrollView setContentOffset:CGPointMake(0, 0)]; //fix problem with inapropriate elements transtion
     [self.scrollView setFrame:[UIScreen mainScreen].bounds];
-    [self.scrollView setContentSize:CGSizeMake(SCREEN_WIDTH * self.arrayOfPages.count, SCREEN_HEIGHT)];
+    [self.scrollView setContentSize:CGSizeMake(screenWidth * self.arrayOfPages.count, screenHeight)];
     
     //-- resizing all tutorial pages
     for (int i = 0; i < self.arrayOfPages.count; i++) {
         UIView *view = self.arrayOfPages[i];
-        [view setFrame:CGRectMake(SCREEN_WIDTH * i, 0, SCREEN_WIDTH, SCREEN_HEIGHT)];
+        [view setFrame:CGRectMake(screenWidth * i, 0, screenWidth, screenHeight)];
     }
     
     //-- removing element views and put in a new coords
@@ -331,13 +341,14 @@
         }
     }
     [self.skipView removeFromSuperview];
-    [self.skipView setFrame:CGRectMake(0, SCREEN_HEIGHT - kHeightSkipView, SCREEN_WIDTH, kHeightSkipView)];
+    [self.skipView setFrame:CGRectMake(0, screenHeight - kHeightSkipView, screenWidth, kHeightSkipView)];
     [self addSubview:self.skipView];
     //---
     
     //--- scrolling to current page selected
-    [self.scrollView setContentOffset:CGPointMake(SCREEN_WIDTH * currentPageNum, 0)];
-    self.lastScreenWidth = SCREEN_WIDTH;
+    [self.scrollView setContentOffset:CGPointMake(screenWidth * currentPageNum, 0)];
+    self.lastScreenWidth = screenWidth;
+    self.doneButton.center = CGPointMake(screenWidth / 2 + self.doneOffsetX, screenHeight / 2 + self.doneOffsetY);
 }
 
 - (void)dealloc;
