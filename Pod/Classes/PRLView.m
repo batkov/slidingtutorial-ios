@@ -112,6 +112,21 @@
         slippingCoefficient:(CGFloat)slippingCoefficient
                     pageNum:(NSInteger)pageNum;
 {
+    [self addElementWithTitle:title
+                         font:nil
+                      offsetX:offsetX
+                      offsetY:offsetY
+          slippingCoefficient:slippingCoefficient
+                      pageNum:pageNum];
+}
+
+- (void)addElementWithTitle:(NSString *)title
+                       font:(UIFont *)font
+                    offsetX:(CGFloat)offsetX
+                    offsetY:(CGFloat)offsetY
+        slippingCoefficient:(CGFloat)slippingCoefficient
+                    pageNum:(NSInteger)pageNum;
+{
     
     if (pageNum >= self.arrayOfPages.count || pageNum < 0) {
         if (self.loggingEnabled) {
@@ -121,6 +136,7 @@
     }
     
     PRLElementView *viewSlip = [[PRLElementView alloc] initWithTitle:title
+                                                                font:font ? :LABEL_FONT
                                                              offsetX:offsetX
                                                              offsetY:offsetY
                                                           pageNumber:pageNum
@@ -327,6 +343,7 @@
                                                   loggingEnabled:self.loggingEnabled];
         } else if (view.type == PRLElementTypeText) {
             viewSlip = [[PRLElementView alloc] initWithTitle:view.title
+                                                        font:view.font
                                                      offsetX:view.offsetX
                                                      offsetY:view.offsetY
                                                   pageNumber:view.pageNumber

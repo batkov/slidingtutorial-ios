@@ -10,8 +10,6 @@
 
 CGFloat const kHeightSkipView = 40.;
 
-#define LABEL_FONT [UIFont systemFontOfSize:28]
-
 @interface PRLElementView ()
 
 @property (nonatomic, readwrite) CGFloat slippingCoefficient;
@@ -23,6 +21,7 @@ CGFloat const kHeightSkipView = 40.;
 @property (nonatomic, readwrite) CGFloat centerXOffset;
 @property (nonatomic, readwrite) CGFloat centerYOffset;
 @property (nonatomic, readwrite) NSString *title;
+@property (nonatomic, readwrite) UIFont *font;
 @property (nonatomic, readwrite) PRLElementType type;
 
 @end
@@ -77,6 +76,7 @@ CGFloat const kHeightSkipView = 40.;
 }
 
 - (instancetype)initWithTitle:(NSString *)title
+                         font:(UIFont *)font
                       offsetX:(CGFloat)offsetX
                       offsetY:(CGFloat)offsetY
                    pageNumber:(NSInteger)pageNumber
@@ -97,7 +97,7 @@ CGFloat const kHeightSkipView = 40.;
     
     UILabel *label = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, destinationSize.width, destinationSize.height)];
     label.text = title;
-    label.font = LABEL_FONT;
+    label.font = font;
     label.textColor = [UIColor whiteColor];
     
     if (self = [super initWithFrame:CGRectMake(postionX + offsetX * scaleCoefficient + SCREEN_WIDTH * slippingCoefficient * pageNumber,
@@ -109,6 +109,7 @@ CGFloat const kHeightSkipView = 40.;
         self.offsetY = offsetY;
         self.pageNumber = pageNumber;
         self.title = title;
+        self.font = font;
         self.type = PRLElementTypeText;
         [self addSubview:label];
         
