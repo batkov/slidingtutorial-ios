@@ -18,13 +18,21 @@
  */
 - (void)skipTutorialTappedOnView:(PRLView *) view;
 
+/**
+ This method calls when Done button pressed
+ */
+- (void)doneTutorialTappedOnView:(PRLView *) view;
+
+/**
+ This method calls when -prepareForShow called to customize skip button text
+ */
 - (NSString *)skipButtonTitleForView:(PRLView *) view;
 
 @end
 
 @interface PRLView : UIView
 
-@property (assign, nonatomic) BOOL loggingEnabled; // Default is NO. 
+@property (assign, nonatomic) BOOL loggingEnabled; // Default is NO.
 
 @property (weak, nonatomic) id <PRLViewProtocol> delegate;
 
@@ -76,6 +84,15 @@
                     offsetY:(CGFloat)offsetY
         slippingCoefficient:(CGFloat)slippingCoefficient
                     pageNum:(NSInteger)pageNum;
+/**
+ Calls for adding done button onto last page
+ 
+ @param title - text to display on done button.
+ @param offsetX and offsetY - layer offset from the center of the screen. If you send offsetX:0 offsetY:0 your text layer will be placed exactly in the center of the screen. Dot (0,0) in this coords system situated in the center of the screen in all device orientations.
+ */
+- (void)addDoneWithTitle:(NSString *)title
+                 offsetX:(CGFloat)offsetX
+                 offsetY:(CGFloat)offsetY;
 
 
 /**

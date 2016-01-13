@@ -8,6 +8,7 @@
 
 #import "PRLView.h"
 #import "PRLElementView.h"
+#import <QuartzCore/QuartzCore.h>
 
 @interface PRLView () <UIScrollViewDelegate>
 
@@ -22,6 +23,10 @@
 @property (nonatomic, assign) CGFloat lastContentOffset;
 @property (nonatomic, assign) CGFloat lastScreenWidth;
 @property (nonatomic, assign) CGFloat scaleCoefficient;
+
+@property (nonatomic, assign) CGFloat doneOffsetX;
+@property (nonatomic, assign) CGFloat doneOffsetY;
+@property (nonatomic, strong) UIButton *doneButton;
 
 @end
 
@@ -127,6 +132,29 @@
     }
 }
 
+- (void)addDoneWithTitle:(NSString *)title
+                 offsetX:(CGFloat)offsetX
+                 offsetY:(CGFloat)offsetY {
+    if (self.doneButton) {
+        if (self.loggingEnabled) {
+            NSLog(@"PRLView: Done button already added. Changing offset and text");
+        }
+    } else {
+        UIButton *button = [[UIButton alloc] initWithFrame:CGRectMake(0, 0, 140, 60)];
+        [button addTarget:self action:@selector(donePressed:) forControlEvents:UIControlEventTouchUpInside];
+        button.layer.masksToBounds = YES;
+        button.layer.borderColor = [UIColor colorWithRed:0.90 green:0.90 blue:0.90 alpha:1].CGColor;
+        button.layer.borderWidth = 1;
+        button.layer.cornerRadius = 5;
+        self.doneButton = button;
+        [self addSubview:self.doneButton];
+    }
+    self.doneOffsetX = offsetX;
+    self.doneOffsetY = offsetY;
+    [self.doneButton setTitle:title forState:UIControlStateNormal];
+    self.doneButton.center = CGPointMake(SCREEN_WIDTH / 2 + offsetX, SCREEN_HEIGHT / 2 + offsetY);
+}
+
 - (void)addBackgroundColor:(UIColor *)color;
 {
     [self.arrayOfBackgroundColors insertObject:color atIndex:self.arrayOfBackgroundColors.count -1];
@@ -135,6 +163,7 @@
 - (void)prepareForShow;
 {
     [self createSkipView];
+    [self updateDoneButtonVisibility];
     if (self.arrayOfBackgroundColors.count -1 < self.arrayOfPages.count) {
         if (self.loggingEnabled) {
             NSLog(@"PRLView: Wrong count of background colors. Should be %lu instead of %lu", (unsigned long)self.arrayOfPages.count, self.arrayOfBackgroundColors.count -1);
@@ -179,6 +208,14 @@
     [self addSubview:skipView];
 }
 
+- (void) updateDoneButtonVisibility;
+{
+    if (!self.doneButton) {
+        return;
+    }
+    self.doneButton.alpha = [self lastPageVisibility];
+}
+
 #pragma mark - UIScrollView delegate
 
 - (void)scrollViewDidScroll:(UIScrollView *)scrollView;
@@ -190,13 +227,7 @@
     }
     
     self.lastContentOffset = contentOffset;
-    NSInteger pageNum =  floorf(scrollView.contentOffset.x / SCREEN_WIDTH);
-    if (pageNum < 0) {
-        pageNum = 0;
-    }
-    if (pageNum > self.arrayOfBackgroundColors.count -2) {
-        pageNum = self.arrayOfBackgroundColors.count -2;
-    }
+    NSInteger pageNum =  [self getCurrentPageNumber];
     
     UIColor *mixedColor = [self colorWithFirstColor:self.arrayOfBackgroundColors[pageNum]
                                         secondColor:self.arrayOfBackgroundColors[pageNum +1]
@@ -204,10 +235,32 @@
     [scrollView setBackgroundColor:mixedColor];
     
     self.pageControl.currentPage = lround(self.scrollView.contentOffset.x / (self.scrollView.contentSize.width / self.pageControl.numberOfPages));
+    [self updateDoneButtonVisibility];
 }
 
 #pragma mark - Private
 
+- (NSInteger) getCurrentPageNumber;
+{
+    NSInteger pageNum =  floorf(self.scrollView.contentOffset.x / SCREEN_WIDTH);
+    if (pageNum < 0) {
+        pageNum = 0;
+    }
+    if (pageNum > self.arrayOfBackgroundColors.count - 2) {
+        pageNum = self.arrayOfBackgroundColors.count - 2;
+    }
+    return pageNum;
+}
+
+- (CGFloat) lastPageVisibility;
+{
+    NSInteger lastPageIndex = self.arrayOfBackgroundColors.count - 2;
+    CGFloat pageNum = (self.scrollView.contentOffset.x / SCREEN_WIDTH);
+    if (pageNum > lastPageIndex - 1 && pageNum <= lastPageIndex + 1) {
+        return 1.f - fabs(lastPageIndex - pageNum);
+    }
+    return 0;
+}
 
 - (UIColor *)colorWithFirstColor:(UIColor *)firstColor
                      secondColor:(UIColor *)secondColor
@@ -230,7 +283,8 @@
     return [UIColor colorWithRed:resultRed green:resultGreen blue:resultBlue alpha:1];
 }
 
-- (void)deviceOrientationChanged:(NSNotification *)notification {
+- (void)deviceOrientationChanged:(NSNotification *)notification;
+{
     if (self.lastScreenWidth == 0) { //first launch setup
         self.lastScreenWidth = SCREEN_WIDTH;
     }
@@ -286,13 +340,32 @@
     self.lastScreenWidth = SCREEN_WIDTH;
 }
 
-- (void)dealloc {
+- (void)dealloc;
+{
     [[NSNotificationCenter defaultCenter] removeObserver:self name:UIDeviceOrientationDidChangeNotification object:nil];
 }
 
-- (void)skipPressed:(id)sender {
+- (void)skipPressed:(id)sender;
+{
+    [self callDelegateSkipPressed];
+}
+
+- (void)donePressed:(id)sender;
+{
+    [self callDelegateDonePressed];
+}
+
+- (void)callDelegateSkipPressed;
+{
     if ([self.delegate respondsToSelector:@selector(skipTutorialTappedOnView:)]) {
         [self.delegate skipTutorialTappedOnView:self];
+    }
+}
+
+- (void)callDelegateDonePressed;
+{
+    if ([self.delegate respondsToSelector:@selector(doneTutorialTappedOnView:)]) {
+        [self.delegate doneTutorialTappedOnView:self];
     }
 }
 
