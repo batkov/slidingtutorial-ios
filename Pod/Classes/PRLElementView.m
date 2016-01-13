@@ -90,7 +90,7 @@ CGFloat const kHeightSkipView = 40.;
         }
         return nil;
     }
-    CGSize destinationSize = [title sizeWithAttributes:@{NSFontAttributeName: LABEL_FONT}];
+    CGSize destinationSize = [title sizeWithAttributes:@{NSFontAttributeName: font}];
     
     CGFloat postionX = (SCREEN_WIDTH - destinationSize.width) / 2;
     CGFloat postionY = (SCREEN_HEIGHT - kHeightSkipView - destinationSize.height) / 2;
