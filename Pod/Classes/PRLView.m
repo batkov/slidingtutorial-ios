@@ -28,6 +28,10 @@
 @property (nonatomic, assign) CGFloat doneOffsetY;
 @property (nonatomic, strong) UIButton *doneButton;
 
+
+@property (nonatomic, strong) dispatch_source_t timer;
+@property (nonatomic, assign) NSTimeInterval timeUntilScroll;
+
 @end
 
 @implementation PRLView
@@ -55,6 +59,7 @@
     
     if ((self = [super initWithFrame:[UIScreen mainScreen].bounds])) {
         self.clipsToBounds = YES;
+        self.autoscrollTime = 4;
         self.loggingEnabled = loggingEnabled;
         self.arrayOfElements = [NSMutableArray new];
         self.arrayOfPages = [NSMutableArray new];
@@ -74,10 +79,50 @@
             [self.arrayOfPages addObject:view];
             [self.scrollView addSubview:view];
         }
+        [self setupTimer];
         
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(deviceOrientationChanged:) name:UIDeviceOrientationDidChangeNotification object:nil];
     }
     return  self;
+}
+
+- (void)setupTimer;
+{
+    __weak typeof(self) selff = self;
+    NSTimeInterval delta = 0.1;
+    dispatch_source_t timer = dispatch_source_create(DISPATCH_SOURCE_TYPE_TIMER, 0, 0, dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_LOW, 0));
+    dispatch_source_set_timer(timer, DISPATCH_TIME_NOW, delta * NSEC_PER_SEC, DISPATCH_TIMER_STRICT);
+    dispatch_source_set_event_handler(timer, ^{
+        dispatch_async(dispatch_get_main_queue(), ^{
+            selff.timeUntilScroll -= delta;
+            [selff riseTimerIfNeeded];
+        });
+    });
+    dispatch_resume(timer);
+    self.timer = timer;
+}
+
+- (void)riseTimerIfNeeded;
+{
+    if (self.autoscrollTime == 0) {
+        return;
+    }
+    if (self.timeUntilScroll > 0) {
+        return;
+    }
+    NSLog(@"PRLView: Autoscroll timer risen");
+    NSUInteger newIndex = [self getCurrentPageNumber] + 1;
+    NSInteger lastPageIndex = [self getPagesCount] - 1;
+    if (newIndex > lastPageIndex) {
+        newIndex = 0;
+    }
+    [self.scrollView setContentOffset:CGPointMake(self.scrollView.frame.size.width * newIndex, 0)
+                             animated:YES];
+    [self resetTimer];
+}
+
+- (void)resetTimer {
+    self.timeUntilScroll = self.autoscrollTime;
 }
 
 - (void)addElementWithName:(NSString *)elementName
@@ -88,7 +133,7 @@
 {
     if (pageNum >= self.arrayOfPages.count || pageNum < 0) {
         if (self.loggingEnabled) {
-            NSLog(@"PRLView: Wrong page number %lu Range of pages should be from 0 to %u", (long)pageNum, self.arrayOfPages.count -1);
+            NSLog(@"PRLView: Wrong page number %lu Range of pages should be from 0 to %li", (long)pageNum, (long) ([self getPagesCount]));
         }
         return;
     }
@@ -130,7 +175,7 @@
     
     if (pageNum >= self.arrayOfPages.count || pageNum < 0) {
         if (self.loggingEnabled) {
-            NSLog(@"PRLView: Wrong page number %lu Range of pages should be from 0 to %u", (long)pageNum, self.arrayOfPages.count -1);
+            NSLog(@"PRLView: Wrong page number %lu Range of pages should be from 0 to %li", (long)pageNum, (long) ([self getPagesCount]));
         }
         return;
     }
@@ -174,16 +219,16 @@
 
 - (void)addBackgroundColor:(UIColor *)color;
 {
-    [self.arrayOfBackgroundColors insertObject:color atIndex:self.arrayOfBackgroundColors.count -1];
+    [self.arrayOfBackgroundColors insertObject:color atIndex:[self getPagesCount]];
 }
 
 - (void)prepareForShow;
 {
     [self createSkipView];
     [self updateDoneButtonVisibility];
-    if (self.arrayOfBackgroundColors.count -1 < self.arrayOfPages.count) {
+    if ([self getPagesCount] < self.arrayOfPages.count) {
         if (self.loggingEnabled) {
-            NSLog(@"PRLView: Wrong count of background colors. Should be %lu instead of %u", (unsigned long)self.arrayOfPages.count, self.arrayOfBackgroundColors.count -1);
+            NSLog(@"PRLView: Wrong count of background colors. Should be %lu instead of %li", (unsigned long)self.arrayOfPages.count, (long) (self.arrayOfPages.count -1));
             NSLog(@"PRLView: The missing colors will be replaced by white");
         }
         while (self.arrayOfBackgroundColors.count < self.arrayOfPages.count) {
@@ -218,7 +263,7 @@
     if (!skipTitle) {
         skipTitle = @"Skip";
     }
-    UIButton *button = [[UIButton alloc] initWithFrame:CGRectMake(15, 0, 70, 40)];
+    UIButton *button = [[UIButton alloc] initWithFrame:CGRectMake(5, 0, 100, 40)];
     [button setTitle:skipTitle forState:UIControlStateNormal];
     [button addTarget:self action:@selector(skipPressed:) forControlEvents:UIControlEventTouchUpInside];
     [skipView addSubview:button];
@@ -253,6 +298,7 @@
     
     self.pageControl.currentPage = lround(self.scrollView.contentOffset.x / (self.scrollView.contentSize.width / self.pageControl.numberOfPages));
     [self updateDoneButtonVisibility];
+    [self resetTimer];
 }
 
 #pragma mark - Private
@@ -263,15 +309,21 @@
     if (pageNum < 0) {
         pageNum = 0;
     }
-    if (pageNum > self.arrayOfBackgroundColors.count - 2) {
-        pageNum = self.arrayOfBackgroundColors.count - 2;
+    NSInteger lastPageIndex = [self getPagesCount] - 1;
+    if (pageNum > lastPageIndex) {
+        pageNum = lastPageIndex;
     }
     return pageNum;
 }
 
+- (NSInteger) getPagesCount;
+{
+    return self.arrayOfBackgroundColors.count - 1;
+}
+
 - (CGFloat) lastPageVisibility;
 {
-    NSInteger lastPageIndex = self.arrayOfBackgroundColors.count - 2;
+    NSInteger lastPageIndex = [self getPagesCount] - 1;
     CGFloat pageNum = (self.scrollView.contentOffset.x / SCREEN_WIDTH);
     if (pageNum > lastPageIndex - 1 && pageNum <= lastPageIndex + 1) {
         return 1.f - fabs(lastPageIndex - pageNum);

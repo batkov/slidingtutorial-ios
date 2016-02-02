@@ -34,6 +34,8 @@
 
 @property (assign, nonatomic) BOOL loggingEnabled; // Default is NO.
 
+@property (assign, nonatomic) NSTimeInterval autoscrollTime; // Default is 4. Set 0 to disable
+
 @property (weak, nonatomic) id <PRLViewProtocol> delegate;
 
 /**
