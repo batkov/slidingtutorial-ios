@@ -256,15 +256,13 @@
     self.pageControl = pageControl;
     
     self.skipView = skipView;
-    NSString *skipTitle = nil;
-    if ([self.delegate respondsToSelector:@selector(skipButtonTitleForView:)]) {
-        skipTitle = [self.delegate skipButtonTitleForView:self];
-    }
-    if (!skipTitle) {
-        skipTitle = @"Skip";
-    }
+    NSString *skipTitle = @"Skip";
     UIButton *button = [[UIButton alloc] initWithFrame:CGRectMake(5, 0, 100, 40)];
     [button setTitle:skipTitle forState:UIControlStateNormal];
+    
+    if ([self.delegate respondsToSelector:@selector(slideView:customizeSkipButton:)]) {
+        [self.delegate slideView:self customizeSkipButton:button];
+    }
     [button addTarget:self action:@selector(skipPressed:) forControlEvents:UIControlEventTouchUpInside];
     [skipView addSubview:button];
     [self addSubview:skipView];

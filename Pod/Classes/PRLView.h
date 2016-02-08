@@ -24,9 +24,9 @@
 - (void)doneTutorialTappedOnView:(PRLView *) view;
 
 /**
- This method calls when -prepareForShow called to customize skip button text
+ This method calls when -prepareForShow called to customize skip button
  */
-- (NSString *)skipButtonTitleForView:(PRLView *) view;
+- (void)slideView:(PRLView *) view customizeSkipButton:(UIButton *) button;
 
 @end
 
