@@ -35,8 +35,8 @@
     [self.viewParallax removeFromSuperview];
 }
 
-- (NSString *)skipButtonTitleForView:(PRLView *)view {
-    return @"Skip!";
+- (void) slideView:(PRLView *)view customizeSkipButton:(UIButton *)button {
+    [button setTitle:@"Hurray!" forState:UIControlStateNormal];
 }
 
 #pragma mark - IBActions
@@ -58,10 +58,10 @@
     [viewParallax addBackgroundColor:[UIColor colorWithRed:35./255 green:75./255 blue:122.0/255 alpha:1]];
     [viewParallax addBackgroundColor:[UIColor colorWithRed:217./255 green:64./255 blue:0.0/255 alpha:1]];
     
-    [viewParallax addElementWithName:@"elem00-04" offsetX:0 offsetY:0 slippingCoefficient:0 pageNum:0];
+    [viewParallax addElementWithName:@"elem00-04" offsetX:0 offsetY:0 xSlippingCoefficient:0 ySlippingCoefficient:2.2 pageNum:0];
     [viewParallax addElementWithName:@"elem00-00" offsetX:0 offsetY:-125 slippingCoefficient:0.1 pageNum:0];
     [viewParallax addElementWithName:@"elem00-01" offsetX:-140 offsetY:-30 slippingCoefficient:-0.2 pageNum:0];
-    [viewParallax addElementWithName:@"elem00-02" offsetX:-110 offsetY:58 slippingCoefficient:0.2 pageNum:0];
+    [viewParallax addElementWithName:@"elem00-02" offsetX:-110 offsetY:58 xSlippingCoefficient:0.2 ySlippingCoefficient:-2.2 pageNum:0];
     //[viewParallax addElementWithName:@"elem00-03" offsetX:0 offsetY:0 slippingCoefficient:0.3 pageNum:0];
     //[viewParallax addElementWithName:@"elem00-05" offsetX:0 offsetY:0 slippingCoefficient:0 pageNum:0];
     [viewParallax addElementWithName:@"elem00-06" offsetX:-170 offsetY:-125 slippingCoefficient:0.15 pageNum:0];
@@ -70,7 +70,7 @@
     [viewParallax addElementWithName:@"elem00-09" offsetX:135 offsetY:-80 slippingCoefficient:0.2 pageNum:0];
     [viewParallax addElementWithName:@"elem00-10" offsetX:-150 offsetY:-85 slippingCoefficient:-0.15 pageNum:0];
     //[viewParallax addElementWithName:@"elem00-11" offsetX:0 offsetY:170 slippingCoefficient:0.05 pageNum:0];
-    [viewParallax addElementWithTitle:@"WEB SEO" offsetX:0 offsetY:170 slippingCoefficient:0.05 pageNum:0];
+    [viewParallax addElementWithTitle:@"WEB SEO" font:nil offsetX:0 offsetY:170 xSlippingCoefficient:-0.2 ySlippingCoefficient:-2.2 pageNum:0];
     
     [viewParallax addElementWithName:@"elem01-07" offsetX:0 offsetY:0 slippingCoefficient:-0.05 pageNum:1];
     [viewParallax addElementWithName:@"elem01-00" offsetX:-145 offsetY:35 slippingCoefficient:0.2 pageNum:1];
