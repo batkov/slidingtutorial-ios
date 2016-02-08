@@ -132,6 +132,21 @@
        slippingCoefficient:(CGFloat)slippingCoefficient
                    pageNum:(NSInteger)pageNum;
 {
+    [self addElementWithName:elementName
+                     offsetX:offsetX
+                     offsetY:offsetY
+        xSlippingCoefficient:slippingCoefficient
+        ySlippingCoefficient:0
+                     pageNum:pageNum];
+}
+
+- (void)addElementWithName:(NSString *)elementName
+                   offsetX:(CGFloat)offsetX
+                   offsetY:(CGFloat)offsetY
+      xSlippingCoefficient:(CGFloat)xSlippingCoefficient
+      ySlippingCoefficient:(CGFloat)ySlippingCoefficient
+                   pageNum:(NSInteger)pageNum;
+{
     if (pageNum >= self.arrayOfPages.count || pageNum < 0) {
         if (self.loggingEnabled) {
             NSLog(@"PRLView: Wrong page number %lu Range of pages should be from 0 to %li", (long)pageNum, (long) ([self getPagesCount]));
@@ -143,7 +158,8 @@
                                                                  offsetX:offsetX
                                                                  offsetY:offsetY
                                                               pageNumber:pageNum
-                                                     slippingCoefficient:slippingCoefficient
+                                                    xSlippingCoefficient:xSlippingCoefficient
+                                                    ySlippingCoefficient:ySlippingCoefficient
                                                         scaleCoefficient:self.scaleCoefficient
                                                           loggingEnabled:self.loggingEnabled];
     if (viewSlip) {
@@ -171,6 +187,22 @@
                     offsetX:(CGFloat)offsetX
                     offsetY:(CGFloat)offsetY
         slippingCoefficient:(CGFloat)slippingCoefficient
+                    pageNum:(NSInteger)pageNum; {
+    [self addElementWithTitle:title
+                         font:font
+                      offsetX:offsetX
+                      offsetY:offsetY
+         xSlippingCoefficient:slippingCoefficient
+         ySlippingCoefficient:0
+                      pageNum:pageNum];
+}
+
+- (void)addElementWithTitle:(NSString *)title
+                       font:(UIFont *)font
+                    offsetX:(CGFloat)offsetX
+                    offsetY:(CGFloat)offsetY
+       xSlippingCoefficient:(CGFloat)xSlippingCoefficient
+       ySlippingCoefficient:(CGFloat)ySlippingCoefficient
                     pageNum:(NSInteger)pageNum;
 {
     
@@ -186,7 +218,8 @@
                                                              offsetX:offsetX
                                                              offsetY:offsetY
                                                           pageNumber:pageNum
-                                                 slippingCoefficient:slippingCoefficient
+                                                xSlippingCoefficient:xSlippingCoefficient
+                                                ySlippingCoefficient:ySlippingCoefficient
                                                     scaleCoefficient:self.scaleCoefficient
                                                       loggingEnabled:self.loggingEnabled];
     if (viewSlip) {
@@ -283,8 +316,10 @@
 {
     CGFloat contentOffset = self.scrollView.contentOffset.x;
     for (PRLElementView *view in self.arrayOfElements) {
-        CGFloat offset = (self.lastContentOffset - contentOffset) * view.slippingCoefficient;
-        [view setFrame:CGRectMake(view.frame.origin.x + offset, view.frame.origin.y, view.frame.size.width, view.frame.size.height)];
+        CGFloat offsetDiff = (self.lastContentOffset - contentOffset);
+        CGFloat xOffset = offsetDiff * view.xSlippingCoefficient;
+        CGFloat yOffset = offsetDiff * view.ySlippingCoefficient;
+        [view setFrame:CGRectMake(view.frame.origin.x + xOffset, view.frame.origin.y + yOffset, view.frame.size.width, view.frame.size.height)];
     }
     
     self.lastContentOffset = contentOffset;
@@ -389,7 +424,8 @@
                                                          offsetX:view.offsetX
                                                          offsetY:view.offsetY
                                                       pageNumber:view.pageNumber
-                                             slippingCoefficient:view.slippingCoefficient
+                                            xSlippingCoefficient:view.xSlippingCoefficient
+                                            ySlippingCoefficient:view.ySlippingCoefficient
                                                 scaleCoefficient:self.scaleCoefficient
                                                   loggingEnabled:self.loggingEnabled];
         } else if (view.type == PRLElementTypeText) {
@@ -398,7 +434,8 @@
                                                      offsetX:view.offsetX
                                                      offsetY:view.offsetY
                                                   pageNumber:view.pageNumber
-                                         slippingCoefficient:view.slippingCoefficient
+                                        xSlippingCoefficient:view.xSlippingCoefficient
+                                        ySlippingCoefficient:view.ySlippingCoefficient
                                             scaleCoefficient:self.scaleCoefficient
                                               loggingEnabled:self.loggingEnabled];
         }

@@ -12,7 +12,8 @@ CGFloat const kHeightSkipView = 40.;
 
 @interface PRLElementView ()
 
-@property (nonatomic, readwrite) CGFloat slippingCoefficient;
+@property (nonatomic, readwrite) CGFloat xSlippingCoefficient;
+@property (nonatomic, readwrite) CGFloat ySlippingCoefficient;
 @property (nonatomic, readwrite) CGFloat offsetX;
 @property (nonatomic, readwrite) CGFloat offsetY;
 @property (nonatomic, readwrite) NSInteger pageNumber;
@@ -32,9 +33,10 @@ CGFloat const kHeightSkipView = 40.;
                           offsetX:(CGFloat)offsetX
                           offsetY:(CGFloat)offsetY
                        pageNumber:(NSInteger)pageNumber
-              slippingCoefficient:(CGFloat)slippingCoefficient
+             xSlippingCoefficient:(CGFloat)xSlippingCoefficient
+             ySlippingCoefficient:(CGFloat)ySlippingCoefficient
                  scaleCoefficient:(CGFloat)scaleCoefficient
-                   loggingEnabled:(BOOL)loggingEnabled
+                   loggingEnabled:(BOOL)loggingEnabled;
 {
     UIImage *image = [UIImage imageNamed:imageName];
     if (!image) {
@@ -55,11 +57,12 @@ CGFloat const kHeightSkipView = 40.;
     CGFloat postionX = (SCREEN_WIDTH - resizedImage.size.width) / 2;
     CGFloat postionY = (SCREEN_HEIGHT - kHeightSkipView - resizedImage.size.height) / 2;
     
-    if (self = [super initWithFrame:CGRectMake(postionX + offsetX * scaleCoefficient + SCREEN_WIDTH * slippingCoefficient * pageNumber,
+    if (self = [super initWithFrame:CGRectMake(postionX + offsetX * scaleCoefficient + SCREEN_WIDTH * xSlippingCoefficient * pageNumber,
                                                postionY + offsetY * scaleCoefficient,
                                                resizedImage.size.width,
                                                resizedImage.size.height)]) {
-        self.slippingCoefficient = slippingCoefficient;
+        self.xSlippingCoefficient = xSlippingCoefficient;
+        self.ySlippingCoefficient = ySlippingCoefficient;
         self.offsetX = offsetX;
         self.offsetY = offsetY;
         self.pageNumber = pageNumber;
@@ -80,7 +83,8 @@ CGFloat const kHeightSkipView = 40.;
                       offsetX:(CGFloat)offsetX
                       offsetY:(CGFloat)offsetY
                    pageNumber:(NSInteger)pageNumber
-          slippingCoefficient:(CGFloat)slippingCoefficient
+         xSlippingCoefficient:(CGFloat)xSlippingCoefficient
+         ySlippingCoefficient:(CGFloat)ySlippingCoefficient
              scaleCoefficient:(CGFloat)scaleCoefficient
                loggingEnabled:(BOOL)loggingEnabled;
 {
@@ -100,11 +104,12 @@ CGFloat const kHeightSkipView = 40.;
     label.font = font;
     label.textColor = [UIColor whiteColor];
     
-    if (self = [super initWithFrame:CGRectMake(postionX + offsetX * scaleCoefficient + SCREEN_WIDTH * slippingCoefficient * pageNumber,
+    if (self = [super initWithFrame:CGRectMake(postionX + offsetX * scaleCoefficient + SCREEN_WIDTH * xSlippingCoefficient * pageNumber,
                                                postionY + offsetY * scaleCoefficient,
                                                destinationSize.width,
                                                destinationSize.height)]) {
-        self.slippingCoefficient = slippingCoefficient;
+        self.xSlippingCoefficient = xSlippingCoefficient;
+        self.ySlippingCoefficient = ySlippingCoefficient;
         self.offsetX = offsetX;
         self.offsetY = offsetY;
         self.pageNumber = pageNumber;

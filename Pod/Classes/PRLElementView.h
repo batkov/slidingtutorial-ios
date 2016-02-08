@@ -21,7 +21,8 @@ typedef NS_ENUM(NSInteger, PRLElementType) {
 
 @interface PRLElementView : UIView
 
-@property (nonatomic, readonly) CGFloat slippingCoefficient;
+@property (nonatomic, readonly) CGFloat xSlippingCoefficient;
+@property (nonatomic, readonly) CGFloat ySlippingCoefficient;
 @property (nonatomic, readonly) CGFloat offsetX;
 @property (nonatomic, readonly) CGFloat offsetY;
 @property (nonatomic, readonly) NSInteger pageNumber;
@@ -34,7 +35,8 @@ typedef NS_ENUM(NSInteger, PRLElementType) {
                           offsetX:(CGFloat)offsetX
                           offsetY:(CGFloat)offsetY
                        pageNumber:(NSInteger)pageNumber
-              slippingCoefficient:(CGFloat)slippingCoefficient
+             xSlippingCoefficient:(CGFloat)xSlippingCoefficient
+             ySlippingCoefficient:(CGFloat)ySlippingCoefficient
                  scaleCoefficient:(CGFloat)scaleCoefficient
                    loggingEnabled:(BOOL)loggingEnabled;
 
@@ -43,7 +45,8 @@ typedef NS_ENUM(NSInteger, PRLElementType) {
                       offsetX:(CGFloat)offsetX
                       offsetY:(CGFloat)offsetY
                    pageNumber:(NSInteger)pageNumber
-          slippingCoefficient:(CGFloat)slippingCoefficient
+         xSlippingCoefficient:(CGFloat)xSlippingCoefficient
+         ySlippingCoefficient:(CGFloat)ySlippingCoefficient
              scaleCoefficient:(CGFloat)scaleCoefficient
                loggingEnabled:(BOOL)loggingEnabled;
 
