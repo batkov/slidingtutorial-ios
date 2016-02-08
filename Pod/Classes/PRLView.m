@@ -88,6 +88,7 @@
 
 - (void)setupTimer;
 {
+    self.timeUntilScroll = self.autoscrollTime;
     __weak typeof(self) selff = self;
     NSTimeInterval delta = 0.1;
     dispatch_source_t timer = dispatch_source_create(DISPATCH_SOURCE_TYPE_TIMER, 0, 0, dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_LOW, 0));
