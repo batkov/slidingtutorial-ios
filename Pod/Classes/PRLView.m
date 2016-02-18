@@ -80,8 +80,6 @@
             [self.scrollView addSubview:view];
         }
         [self setupTimer];
-        
-        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(deviceOrientationChanged:) name:UIDeviceOrientationDidChangeNotification object:nil];
     }
     return  self;
 }
@@ -386,15 +384,11 @@
     return [UIColor colorWithRed:resultRed green:resultGreen blue:resultBlue alpha:1];
 }
 
-- (void)deviceOrientationChanged:(NSNotification *)notification;
-{
+- (void) layoutSubviews {
+    [super layoutSubviews];
     CGFloat screenWidth = SCREEN_WIDTH;
     CGFloat screenHeight = SCREEN_HEIGHT;
     if (self.loggingEnabled) {
-        BOOL isDeviceLandscape = UIDeviceOrientationIsPortrait([notification.object orientation]);
-        BOOL isStatusLandscape = UIInterfaceOrientationIsPortrait([[UIApplication sharedApplication] statusBarOrientation]);
-        NSLog(@"PRLView: DetectedOrientationChange: %@", isDeviceLandscape ? @"Portrait" : @"Landscape");
-        NSLog(@"PRLView: Current StatusBarOrientation: %@", isStatusLandscape ? @"Portrait" : @"Landscape");
         NSLog(@"PRLView: screenWidth: %.0f, screenHeight: %.0f", screenWidth, screenHeight);
     }
     if (self.lastScreenWidth == 0) { //first launch setup
