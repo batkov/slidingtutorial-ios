@@ -448,7 +448,7 @@
     [self.skipView setFrame:CGRectMake(0, screenHeight - kHeightSkipView, screenWidth, kHeightSkipView)];
     [self addSubview:self.skipView];
     //---
-    
+    self.pageControl.center = CGPointMake(SCREEN_WIDTH / 2, kHeightSkipView /2);
     //--- scrolling to current page selected
     [self.scrollView setContentOffset:CGPointMake(screenWidth * currentPageNum, 0)];
     self.lastScreenWidth = screenWidth;
