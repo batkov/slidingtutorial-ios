@@ -59,6 +59,7 @@
     
     if ((self = [super initWithFrame:[UIScreen mainScreen].bounds])) {
         self.clipsToBounds = YES;
+        self.showBottomPanel = YES;
         self.autoscrollTime = 4;
         self.loggingEnabled = loggingEnabled;
         self.arrayOfElements = [NSMutableArray new];
@@ -256,7 +257,7 @@
 
 - (void)prepareForShow;
 {
-    [self createSkipView];
+    [self createBottomPanel];
     [self updateDoneButtonVisibility];
     if ([self getPagesCount] < self.arrayOfPages.count) {
         if (self.loggingEnabled) {
@@ -274,8 +275,12 @@
     [self.scrollView setBackgroundColor:mixedColor];
 }
 
-- (void)createSkipView;
+- (void)createBottomPanel;
 {
+    if (!self.showBottomPanel) {
+        return;
+    }
+    
     UIView *skipView = [[UIView alloc] initWithFrame:CGRectMake(0, SCREEN_HEIGHT - kHeightSkipView, SCREEN_WIDTH, kHeightSkipView)];
     UIView *lineView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, SCREEN_WIDTH *2, 1)];
     [lineView setBackgroundColor:[UIColor colorWithRed:0.90 green:0.90 blue:0.90 alpha:1]];
