@@ -120,7 +120,8 @@
                       color:(UIColor *)color
                     offsetX:(CGFloat)offsetX
                     offsetY:(CGFloat)offsetY
-        slippingCoefficient:(CGFloat)slippingCoefficient;
+        slippingCoefficient:(CGFloat)slippingCoefficient
+                    pageNum:(NSInteger)pageNum;
 
 /**
  Calls for adding text onto sliding page
