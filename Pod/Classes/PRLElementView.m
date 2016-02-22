@@ -96,8 +96,11 @@ CGFloat const kHeightSkipView = 40.;
         }
         return nil;
     }
-    CGSize destinationSize = [title sizeWithAttributes:@{NSFontAttributeName: font}];
-    
+    CGRect rect = [title boundingRectWithSize:CGSizeMake(SCREEN_WIDTH, CGFLOAT_MAX)
+                                      options:NSStringDrawingUsesLineFragmentOrigin
+                                   attributes:@{NSFontAttributeName: font}
+                                      context:nil];
+    CGSize destinationSize = rect.size;
     CGFloat postionX = (SCREEN_WIDTH - destinationSize.width) / 2;
     CGFloat postionY = (SCREEN_HEIGHT - kHeightSkipView - destinationSize.height) / 2;
     
@@ -105,6 +108,9 @@ CGFloat const kHeightSkipView = 40.;
     label.text = title;
     label.font = font;
     label.textColor = color;
+    label.numberOfLines = 0;
+    label.textAlignment = NSTextAlignmentCenter;
+    label.lineBreakMode = NSLineBreakByWordWrapping;
     
     if (self = [super initWithFrame:CGRectMake(postionX + offsetX * scaleCoefficient + SCREEN_WIDTH * xSlippingCoefficient * pageNumber,
                                                postionY + offsetY * scaleCoefficient,
