@@ -32,6 +32,7 @@ typedef NS_ENUM(NSInteger, PRLElementType) {
 @property (nonatomic, readonly) UIFont *font;
 @property (nonatomic, readonly) UIColor *color;
 @property (nonatomic, readonly) PRLElementType type;
+@property (nonatomic, readonly) CGRect originalFrame;
 
 - (instancetype)initWithImageName:(NSString *)imageName
                           offsetX:(CGFloat)offsetX

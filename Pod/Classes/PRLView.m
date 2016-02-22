@@ -322,16 +322,20 @@
 
 - (void)scrollViewDidScroll:(UIScrollView *)scrollView;
 {
+    NSInteger pageNum =  [self getCurrentPageNumber];
     CGFloat contentOffset = self.scrollView.contentOffset.x;
     for (PRLElementView *view in self.arrayOfElements) {
         CGFloat offsetDiff = (self.lastContentOffset - contentOffset);
         CGFloat xOffset = offsetDiff * view.xSlippingCoefficient;
-        CGFloat yOffset = offsetDiff * view.ySlippingCoefficient;
-        [view setFrame:CGRectMake(view.frame.origin.x + xOffset, view.frame.origin.y + yOffset, view.frame.size.width, view.frame.size.height)];
+        CGFloat yOffset = 0;
+        if (view.ySlippingCoefficient != 0) {
+            CGFloat pageOffset = view.pageNumber * SCREEN_WIDTH;
+            yOffset = (contentOffset - pageOffset) * view.ySlippingCoefficient;
+        }
+        [view setFrame:CGRectMake(view.frame.origin.x + xOffset, view.originalFrame.origin.y + yOffset, view.frame.size.width, view.frame.size.height)];
     }
     
     self.lastContentOffset = contentOffset;
-    NSInteger pageNum =  [self getCurrentPageNumber];
     
     UIColor *mixedColor = [self colorWithFirstColor:self.arrayOfBackgroundColors[pageNum]
                                         secondColor:self.arrayOfBackgroundColors[pageNum +1]

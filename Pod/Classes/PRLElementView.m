@@ -25,6 +25,7 @@ CGFloat const kHeightSkipView = 40.;
 @property (nonatomic, readwrite) UIFont *font;
 @property (nonatomic, readwrite) UIColor *color;
 @property (nonatomic, readwrite) PRLElementType type;
+@property (nonatomic, readwrite) CGRect originalFrame;
 
 @end
 
@@ -62,6 +63,7 @@ CGFloat const kHeightSkipView = 40.;
                                                postionY + offsetY * scaleCoefficient,
                                                resizedImage.size.width,
                                                resizedImage.size.height)]) {
+        self.originalFrame = self.frame;
         self.xSlippingCoefficient = xSlippingCoefficient;
         self.ySlippingCoefficient = ySlippingCoefficient;
         self.offsetX = offsetX;
@@ -116,6 +118,7 @@ CGFloat const kHeightSkipView = 40.;
                                                postionY + offsetY * scaleCoefficient,
                                                destinationSize.width,
                                                destinationSize.height)]) {
+        self.originalFrame = self.frame;
         self.xSlippingCoefficient = xSlippingCoefficient;
         self.ySlippingCoefficient = ySlippingCoefficient;
         self.offsetX = offsetX;
