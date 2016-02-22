@@ -12,6 +12,7 @@
 #define SCREEN_HEIGHT [UIScreen mainScreen].bounds.size.height
 
 #define LABEL_FONT [UIFont systemFontOfSize:28]
+#define LABEL_COLOR [UIColor blackColor]
 
 extern CGFloat const kHeightSkipView;
 typedef NS_ENUM(NSInteger, PRLElementType) {
@@ -29,6 +30,7 @@ typedef NS_ENUM(NSInteger, PRLElementType) {
 @property (nonatomic, readonly) NSString *imageName;
 @property (nonatomic, readonly) NSString *title;
 @property (nonatomic, readonly) UIFont *font;
+@property (nonatomic, readonly) UIColor *color;
 @property (nonatomic, readonly) PRLElementType type;
 
 - (instancetype)initWithImageName:(NSString *)imageName
@@ -42,6 +44,7 @@ typedef NS_ENUM(NSInteger, PRLElementType) {
 
 - (instancetype)initWithTitle:(NSString *)title
                          font:(UIFont *)font
+                        color:(UIColor *)color
                       offsetX:(CGFloat)offsetX
                       offsetY:(CGFloat)offsetY
                    pageNumber:(NSInteger)pageNumber

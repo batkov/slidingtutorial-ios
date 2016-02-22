@@ -175,6 +175,7 @@
 {
     [self addElementWithTitle:title
                          font:nil
+                        color:nil
                       offsetX:offsetX
                       offsetY:offsetY
           slippingCoefficient:slippingCoefficient
@@ -183,12 +184,14 @@
 
 - (void)addElementWithTitle:(NSString *)title
                        font:(UIFont *)font
+                      color:(UIColor *)color
                     offsetX:(CGFloat)offsetX
                     offsetY:(CGFloat)offsetY
         slippingCoefficient:(CGFloat)slippingCoefficient
                     pageNum:(NSInteger)pageNum; {
     [self addElementWithTitle:title
                          font:font
+                        color:color
                       offsetX:offsetX
                       offsetY:offsetY
          xSlippingCoefficient:slippingCoefficient
@@ -198,6 +201,7 @@
 
 - (void)addElementWithTitle:(NSString *)title
                        font:(UIFont *)font
+                      color:(UIColor *)color
                     offsetX:(CGFloat)offsetX
                     offsetY:(CGFloat)offsetY
        xSlippingCoefficient:(CGFloat)xSlippingCoefficient
@@ -213,7 +217,8 @@
     }
     
     PRLElementView *viewSlip = [[PRLElementView alloc] initWithTitle:title
-                                                                font:font ? :LABEL_FONT
+                                                                font:font ? : LABEL_FONT
+                                                               color:color ? : LABEL_COLOR
                                                              offsetX:offsetX
                                                              offsetY:offsetY
                                                           pageNumber:pageNum
@@ -430,6 +435,7 @@
         } else if (view.type == PRLElementTypeText) {
             viewSlip = [[PRLElementView alloc] initWithTitle:view.title
                                                         font:view.font
+                                                       color:view.color
                                                      offsetX:view.offsetX
                                                      offsetY:view.offsetY
                                                   pageNumber:view.pageNumber

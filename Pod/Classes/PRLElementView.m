@@ -23,6 +23,7 @@ CGFloat const kHeightSkipView = 40.;
 @property (nonatomic, readwrite) CGFloat centerYOffset;
 @property (nonatomic, readwrite) NSString *title;
 @property (nonatomic, readwrite) UIFont *font;
+@property (nonatomic, readwrite) UIColor *color;
 @property (nonatomic, readwrite) PRLElementType type;
 
 @end
@@ -80,6 +81,7 @@ CGFloat const kHeightSkipView = 40.;
 
 - (instancetype)initWithTitle:(NSString *)title
                          font:(UIFont *)font
+                        color:(UIColor *)color
                       offsetX:(CGFloat)offsetX
                       offsetY:(CGFloat)offsetY
                    pageNumber:(NSInteger)pageNumber
@@ -102,7 +104,7 @@ CGFloat const kHeightSkipView = 40.;
     UILabel *label = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, destinationSize.width, destinationSize.height)];
     label.text = title;
     label.font = font;
-    label.textColor = [UIColor whiteColor];
+    label.textColor = color;
     
     if (self = [super initWithFrame:CGRectMake(postionX + offsetX * scaleCoefficient + SCREEN_WIDTH * xSlippingCoefficient * pageNumber,
                                                postionY + offsetY * scaleCoefficient,
@@ -115,6 +117,7 @@ CGFloat const kHeightSkipView = 40.;
         self.pageNumber = pageNumber;
         self.title = title;
         self.font = font;
+        self.color = color;
         self.type = PRLElementTypeText;
         [self addSubview:label];
         
