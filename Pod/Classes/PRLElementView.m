@@ -8,8 +8,6 @@
 
 #import "PRLElementView.h"
 
-CGFloat const kHeightSkipView = 40.;
-
 @interface PRLElementView ()
 
 @property (nonatomic, readwrite) CGFloat xSlippingCoefficient;
@@ -57,7 +55,7 @@ CGFloat const kHeightSkipView = 40.;
     UIImageView *imageView = [[UIImageView alloc] initWithImage:resizedImage];
     
     CGFloat postionX = (SCREEN_WIDTH - resizedImage.size.width) / 2;
-    CGFloat postionY = (SCREEN_HEIGHT - kHeightSkipView - resizedImage.size.height) / 2;
+    CGFloat postionY = (SCREEN_HEIGHT - [PRLElementView skipViewHeight] - resizedImage.size.height) / 2;
     
     if (self = [super initWithFrame:CGRectMake(postionX + offsetX * scaleCoefficient + SCREEN_WIDTH * xSlippingCoefficient * pageNumber,
                                                postionY + offsetY * scaleCoefficient,
@@ -104,7 +102,7 @@ CGFloat const kHeightSkipView = 40.;
                                       context:nil];
     CGSize destinationSize = rect.size;
     CGFloat postionX = (SCREEN_WIDTH - destinationSize.width) / 2;
-    CGFloat postionY = (SCREEN_HEIGHT - kHeightSkipView - destinationSize.height) / 2;
+    CGFloat postionY = (SCREEN_HEIGHT - [PRLElementView skipViewHeight] - destinationSize.height) / 2;
     
     UILabel *label = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, destinationSize.width, destinationSize.height)];
     label.text = title;
@@ -135,6 +133,10 @@ CGFloat const kHeightSkipView = 40.;
         }
     }
     return self;
+}
+
++ (CGFloat) skipViewHeight {
+    return UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad ? 60.f : 40.f;
 }
 
 @end

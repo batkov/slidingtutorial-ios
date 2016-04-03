@@ -76,7 +76,7 @@
         [self addSubview:self.scrollView];
         
         for (int i = 0; i < pageCount; i++) {
-            UIView *view = [[UIView alloc] initWithFrame:CGRectMake(SCREEN_WIDTH * i, 0, SCREEN_WIDTH, SCREEN_HEIGHT - kHeightSkipView)];
+            UIView *view = [[UIView alloc] initWithFrame:CGRectMake(SCREEN_WIDTH * i, 0, SCREEN_WIDTH, SCREEN_HEIGHT - [PRLElementView skipViewHeight])];
             [self.arrayOfPages addObject:view];
             [self.scrollView addSubview:view];
         }
@@ -286,20 +286,20 @@
         return;
     }
     
-    UIView *skipView = [[UIView alloc] initWithFrame:CGRectMake(0, SCREEN_HEIGHT - kHeightSkipView, SCREEN_WIDTH, kHeightSkipView)];
+    UIView *skipView = [[UIView alloc] initWithFrame:CGRectMake(0, SCREEN_HEIGHT - [PRLElementView skipViewHeight], SCREEN_WIDTH, [PRLElementView skipViewHeight])];
     UIView *lineView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, SCREEN_WIDTH *2, 1)];
     [lineView setBackgroundColor:[UIColor colorWithRed:0.90 green:0.90 blue:0.90 alpha:1]];
     [skipView addSubview:lineView];
     
     UIPageControl *pageControl = [UIPageControl new];
     pageControl.numberOfPages = [self.arrayOfPages count];
-    pageControl.center = CGPointMake(SCREEN_WIDTH / 2, kHeightSkipView /2);
+    pageControl.center = CGPointMake(SCREEN_WIDTH / 2, [PRLElementView skipViewHeight] /2);
     [skipView addSubview:pageControl];
     self.pageControl = pageControl;
     
     self.skipView = skipView;
     NSString *skipTitle = @"Skip";
-    UIButton *button = [[UIButton alloc] initWithFrame:CGRectMake(5, 0, 100, 40)];
+    UIButton *button = [[UIButton alloc] initWithFrame:CGRectMake(5, 0, 100, [PRLElementView skipViewHeight])];
     [button setTitle:skipTitle forState:UIControlStateNormal];
     
     if ([self.delegate respondsToSelector:@selector(slideView:customizeSkipButton:)]) {
@@ -455,10 +455,10 @@
         }
     }
     [self.skipView removeFromSuperview];
-    [self.skipView setFrame:CGRectMake(0, screenHeight - kHeightSkipView, screenWidth, kHeightSkipView)];
+    [self.skipView setFrame:CGRectMake(0, screenHeight - [PRLElementView skipViewHeight], screenWidth, [PRLElementView skipViewHeight])];
     [self addSubview:self.skipView];
     //---
-    self.pageControl.center = CGPointMake(SCREEN_WIDTH / 2, kHeightSkipView /2);
+    self.pageControl.center = CGPointMake(SCREEN_WIDTH / 2, [PRLElementView skipViewHeight] /2);
     //--- scrolling to current page selected
     [self.scrollView setContentOffset:CGPointMake(screenWidth * currentPageNum, 0)];
     self.lastScreenWidth = screenWidth;

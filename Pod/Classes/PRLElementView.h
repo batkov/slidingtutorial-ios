@@ -14,7 +14,6 @@
 #define LABEL_FONT [UIFont systemFontOfSize:28]
 #define LABEL_COLOR [UIColor blackColor]
 
-extern CGFloat const kHeightSkipView;
 typedef NS_ENUM(NSInteger, PRLElementType) {
     PRLElementTypeImage,
     PRLElementTypeText,
@@ -53,5 +52,7 @@ typedef NS_ENUM(NSInteger, PRLElementType) {
          ySlippingCoefficient:(CGFloat)ySlippingCoefficient
              scaleCoefficient:(CGFloat)scaleCoefficient
                loggingEnabled:(BOOL)loggingEnabled;
+
++ (CGFloat) skipViewHeight;
 
 @end
