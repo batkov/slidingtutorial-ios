@@ -54,10 +54,23 @@
  
  @param pageCount - a count of pages in tutorial and second parameter is a coefficient of scaling images (put 1.0 if you don't need scale and images will displaying in a full size).
  @param scaleCoefficient - is a coefficient of scaling images (put 1.0 if you don't need scale and images will displaying in a full size).
+ @param size - size for view.
+ */
+- (instancetype)initWithPageCount:(NSInteger)pageCount
+                 scaleCoefficient:(CGFloat)scaleCoefficient
+                             size:(CGSize)size;
+
+/**
+ Calls for instantiating Slipping Tutorial view
+ 
+ @param pageCount - a count of pages in tutorial and second parameter is a coefficient of scaling images (put 1.0 if you don't need scale and images will displaying in a full size).
+ @param scaleCoefficient - is a coefficient of scaling images (put 1.0 if you don't need scale and images will displaying in a full size).
+ @param size - size for view.
  @param loggingEnabled - is a flag to enable or disable logging.
  */
 - (instancetype)initWithPageCount:(NSInteger)pageCount
                  scaleCoefficient:(CGFloat)scaleCoefficient
+                             size:(CGSize)size
                    loggingEnabled:(BOOL)loggingEnabled;
 
 

@@ -43,11 +43,22 @@
 {
     return [self initWithPageCount:pageCount
                   scaleCoefficient:scaleCoefficient
+                              size:[[UIScreen mainScreen] bounds].size];
+}
+
+- (instancetype)initWithPageCount:(NSInteger)pageCount
+                 scaleCoefficient:(CGFloat)scaleCoefficient
+                             size:(CGSize)size;
+{
+    return [self initWithPageCount:pageCount
+                  scaleCoefficient:scaleCoefficient
+                              size:size
                     loggingEnabled:NO];
 }
 
 - (instancetype)initWithPageCount:(NSInteger)pageCount
                  scaleCoefficient:(CGFloat)scaleCoefficient
+                             size:(CGSize)size
                    loggingEnabled:(BOOL)loggingEnabled;
 {
     if (pageCount <= 0) {
@@ -69,14 +80,14 @@
         self.lastScreenWidth = 0;
         self.scaleCoefficient = scaleCoefficient;
         
-        self.scrollView = [[UIScrollView alloc] initWithFrame:[UIScreen mainScreen].bounds];
+        self.scrollView = [[UIScrollView alloc] initWithFrame:CGRectMake(0, 0, size.width, size.height)];
         self.scrollView.delegate = self;
         self.scrollView.pagingEnabled = YES;
-        [self.scrollView setContentSize:CGSizeMake(SCREEN_WIDTH * pageCount, SCREEN_HEIGHT)];
+        [self.scrollView setContentSize:CGSizeMake(size.width * pageCount, size.height)];
         [self addSubview:self.scrollView];
         
         for (int i = 0; i < pageCount; i++) {
-            UIView *view = [[UIView alloc] initWithFrame:CGRectMake(SCREEN_WIDTH * i, 0, SCREEN_WIDTH, SCREEN_HEIGHT - [PRLElementView skipViewHeight])];
+            UIView *view = [[UIView alloc] initWithFrame:CGRectMake(size.width * i, 0, size.width, size.height - [PRLElementView skipViewHeight:size.height])];
             [self.arrayOfPages addObject:view];
             [self.scrollView addSubview:view];
         }
@@ -156,6 +167,7 @@
     PRLElementView *viewSlip = [[PRLElementView alloc] initWithImageName:elementName
                                                                  offsetX:offsetX
                                                                  offsetY:offsetY
+                                                                    size:self.scrollView.frame.size
                                                               pageNumber:pageNum
                                                     xSlippingCoefficient:xSlippingCoefficient
                                                     ySlippingCoefficient:ySlippingCoefficient
@@ -221,6 +233,7 @@
                                                                color:color ? : LABEL_COLOR
                                                              offsetX:offsetX
                                                              offsetY:offsetY
+                                                                size:self.scrollView.frame.size
                                                           pageNumber:pageNum
                                                 xSlippingCoefficient:xSlippingCoefficient
                                                 ySlippingCoefficient:ySlippingCoefficient
@@ -252,7 +265,7 @@
     self.doneOffsetX = offsetX;
     self.doneOffsetY = offsetY;
     [self.doneButton setTitle:title forState:UIControlStateNormal];
-    self.doneButton.center = CGPointMake(SCREEN_WIDTH / 2 + offsetX, SCREEN_HEIGHT / 2 + offsetY);
+    self.doneButton.center = CGPointMake(self.scrollView.frame.size.width / 2 + offsetX, self.scrollView.frame.size.height / 2 + offsetY);
 }
 
 - (void)addBackgroundColor:(UIColor *)color;
@@ -285,21 +298,22 @@
     if (!self.showBottomPanel) {
         return;
     }
-    
-    UIView *skipView = [[UIView alloc] initWithFrame:CGRectMake(0, SCREEN_HEIGHT - [PRLElementView skipViewHeight], SCREEN_WIDTH, [PRLElementView skipViewHeight])];
-    UIView *lineView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, SCREEN_WIDTH *2, 1)];
+    CGFloat width = self.scrollView.frame.size.width;
+    CGFloat height = self.scrollView.frame.size.height;
+    UIView *skipView = [[UIView alloc] initWithFrame:CGRectMake(0, height - [PRLElementView skipViewHeight:height], width, [PRLElementView skipViewHeight:height])];
+    UIView *lineView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, width *2, 1)];
     [lineView setBackgroundColor:[UIColor colorWithRed:0.90 green:0.90 blue:0.90 alpha:1]];
     [skipView addSubview:lineView];
     
     UIPageControl *pageControl = [UIPageControl new];
     pageControl.numberOfPages = [self.arrayOfPages count];
-    pageControl.center = CGPointMake(SCREEN_WIDTH / 2, [PRLElementView skipViewHeight] /2);
+    pageControl.center = CGPointMake(width / 2, [PRLElementView skipViewHeight:height] /2);
     [skipView addSubview:pageControl];
     self.pageControl = pageControl;
     
     self.skipView = skipView;
     NSString *skipTitle = @"Skip";
-    UIButton *button = [[UIButton alloc] initWithFrame:CGRectMake(5, 0, 100, [PRLElementView skipViewHeight])];
+    UIButton *button = [[UIButton alloc] initWithFrame:CGRectMake(5, 0, 100, [PRLElementView skipViewHeight:height])];
     [button setTitle:skipTitle forState:UIControlStateNormal];
     
     if ([self.delegate respondsToSelector:@selector(slideView:customizeSkipButton:)]) {
@@ -322,6 +336,7 @@
 
 - (void)scrollViewDidScroll:(UIScrollView *)scrollView;
 {
+    CGFloat width = self.scrollView.frame.size.width;
     NSInteger pageNum =  [self getCurrentPageNumber];
     CGFloat contentOffset = self.scrollView.contentOffset.x;
     for (PRLElementView *view in self.arrayOfElements) {
@@ -329,7 +344,7 @@
         CGFloat xOffset = offsetDiff * view.xSlippingCoefficient;
         CGFloat yOffset = 0;
         if (view.ySlippingCoefficient != 0) {
-            CGFloat pageOffset = view.pageNumber * SCREEN_WIDTH;
+            CGFloat pageOffset = view.pageNumber * width;
             yOffset = (contentOffset - pageOffset) * view.ySlippingCoefficient;
         }
         [view setFrame:CGRectMake(view.frame.origin.x + xOffset, view.originalFrame.origin.y + yOffset, view.frame.size.width, view.frame.size.height)];
@@ -351,7 +366,8 @@
 
 - (NSInteger) getCurrentPageNumber;
 {
-    NSInteger pageNum =  floorf(self.scrollView.contentOffset.x / SCREEN_WIDTH);
+    CGFloat width = self.scrollView.frame.size.width;
+    NSInteger pageNum =  floorf(self.scrollView.contentOffset.x / width);
     if (pageNum < 0) {
         pageNum = 0;
     }
@@ -369,8 +385,9 @@
 
 - (CGFloat) lastPageVisibility;
 {
+    CGFloat width = self.scrollView.frame.size.width;
     NSInteger lastPageIndex = [self getPagesCount] - 1;
-    CGFloat pageNum = (self.scrollView.contentOffset.x / SCREEN_WIDTH);
+    CGFloat pageNum = (self.scrollView.contentOffset.x / width);
     if (pageNum > lastPageIndex - 1 && pageNum <= lastPageIndex + 1) {
         return 1.f - fabs(lastPageIndex - pageNum);
     }
@@ -381,6 +398,7 @@
                      secondColor:(UIColor *)secondColor
                           offset:(CGFloat)offset;
 {
+    CGFloat width = self.scrollView.frame.size.width;
     CGFloat red1, green1, blue1, alpha1;
     CGFloat red2, green2, blue2, alpha2;
     [firstColor  getRed:&red1 green:&green1 blue:&blue1 alpha:&alpha1];
@@ -390,18 +408,19 @@
     CGFloat greenDelta = green2 - green1;
     CGFloat blueDelta = blue2 - blue1;
     
-    offset = fmod(offset, SCREEN_WIDTH);
-    CGFloat resultRed = redDelta * (offset / SCREEN_WIDTH) + red1;
-    CGFloat resultGreen = greenDelta * (offset / SCREEN_WIDTH) + green1;
-    CGFloat resultBlue = blueDelta * (offset / SCREEN_WIDTH) + blue1;
+    offset = fmod(offset, width);
+    CGFloat resultRed = redDelta * (offset / width) + red1;
+    CGFloat resultGreen = greenDelta * (offset / width) + green1;
+    CGFloat resultBlue = blueDelta * (offset / width) + blue1;
     
     return [UIColor colorWithRed:resultRed green:resultGreen blue:resultBlue alpha:1];
 }
 
 - (void) layoutSubviews {
     [super layoutSubviews];
-    CGFloat screenWidth = SCREEN_WIDTH;
-    CGFloat screenHeight = SCREEN_HEIGHT;
+    CGSize size = self.scrollView.frame.size;
+    CGFloat screenWidth = size.width;
+    CGFloat screenHeight = size.height;
     if (self.loggingEnabled) {
         NSLog(@"PRLView: screenWidth: %.0f, screenHeight: %.0f", screenWidth, screenHeight);
     }
@@ -431,6 +450,7 @@
             viewSlip = [[PRLElementView alloc] initWithImageName:view.imageName
                                                          offsetX:view.offsetX
                                                          offsetY:view.offsetY
+                                                            size:size
                                                       pageNumber:view.pageNumber
                                             xSlippingCoefficient:view.xSlippingCoefficient
                                             ySlippingCoefficient:view.ySlippingCoefficient
@@ -442,6 +462,7 @@
                                                        color:view.color
                                                      offsetX:view.offsetX
                                                      offsetY:view.offsetY
+                                                        size:size
                                                   pageNumber:view.pageNumber
                                         xSlippingCoefficient:view.xSlippingCoefficient
                                         ySlippingCoefficient:view.ySlippingCoefficient
@@ -455,10 +476,10 @@
         }
     }
     [self.skipView removeFromSuperview];
-    [self.skipView setFrame:CGRectMake(0, screenHeight - [PRLElementView skipViewHeight], screenWidth, [PRLElementView skipViewHeight])];
+    [self.skipView setFrame:CGRectMake(0, screenHeight - [PRLElementView skipViewHeight:screenHeight], screenWidth, [PRLElementView skipViewHeight:screenHeight])];
     [self addSubview:self.skipView];
     //---
-    self.pageControl.center = CGPointMake(SCREEN_WIDTH / 2, [PRLElementView skipViewHeight] /2);
+    self.pageControl.center = CGPointMake(screenWidth / 2, [PRLElementView skipViewHeight:screenHeight] /2);
     //--- scrolling to current page selected
     [self.scrollView setContentOffset:CGPointMake(screenWidth * currentPageNum, 0)];
     self.lastScreenWidth = screenWidth;

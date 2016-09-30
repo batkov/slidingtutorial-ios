@@ -8,9 +8,6 @@
 
 #import <UIKit/UIKit.h>
 
-#define SCREEN_WIDTH [UIScreen mainScreen].bounds.size.width
-#define SCREEN_HEIGHT [UIScreen mainScreen].bounds.size.height
-
 #define LABEL_FONT [UIFont systemFontOfSize:28]
 #define LABEL_COLOR [UIColor blackColor]
 
@@ -36,6 +33,7 @@ typedef NS_ENUM(NSInteger, PRLElementType) {
 - (instancetype)initWithImageName:(NSString *)imageName
                           offsetX:(CGFloat)offsetX
                           offsetY:(CGFloat)offsetY
+                             size:(CGSize) size
                        pageNumber:(NSInteger)pageNumber
              xSlippingCoefficient:(CGFloat)xSlippingCoefficient
              ySlippingCoefficient:(CGFloat)ySlippingCoefficient
@@ -47,12 +45,13 @@ typedef NS_ENUM(NSInteger, PRLElementType) {
                         color:(UIColor *)color
                       offsetX:(CGFloat)offsetX
                       offsetY:(CGFloat)offsetY
+                         size:(CGSize) size
                    pageNumber:(NSInteger)pageNumber
          xSlippingCoefficient:(CGFloat)xSlippingCoefficient
          ySlippingCoefficient:(CGFloat)ySlippingCoefficient
              scaleCoefficient:(CGFloat)scaleCoefficient
                loggingEnabled:(BOOL)loggingEnabled;
 
-+ (CGFloat) skipViewHeight;
++ (CGFloat) skipViewHeight:(CGFloat) viewHeight;
 
 @end

@@ -1,8 +1,8 @@
 PODS:
-  - FBSnapshotTestCase (2.0.5):
-    - FBSnapshotTestCase/SwiftSupport (= 2.0.5)
-  - FBSnapshotTestCase/Core (2.0.5)
-  - FBSnapshotTestCase/SwiftSupport (2.0.5):
+  - FBSnapshotTestCase (2.0.7):
+    - FBSnapshotTestCase/SwiftSupport (= 2.0.7)
+  - FBSnapshotTestCase/Core (2.0.7)
+  - FBSnapshotTestCase/SwiftSupport (2.0.7):
     - FBSnapshotTestCase/Core
   - SlidingTutorial (0.9.0)
 
@@ -15,7 +15,7 @@ EXTERNAL SOURCES:
     :path: ../
 
 SPEC CHECKSUMS:
-  FBSnapshotTestCase: 6917deb01d0556dd544536f9eb34e0cf26f904d5
-  SlidingTutorial: 107783eba0c8b02f102704b93a89113393a0aaa4
+  FBSnapshotTestCase: 7e85180d0d141a0cf472352edda7e80d7eaeb547
+  SlidingTutorial: f34288d8a2c5839270ff739459d113de094abd2b
 
-COCOAPODS: 0.38.2
+COCOAPODS: 0.39.0

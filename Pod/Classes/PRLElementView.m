@@ -32,6 +32,7 @@
 - (instancetype)initWithImageName:(NSString *)imageName
                           offsetX:(CGFloat)offsetX
                           offsetY:(CGFloat)offsetY
+                             size:(CGSize) size
                        pageNumber:(NSInteger)pageNumber
              xSlippingCoefficient:(CGFloat)xSlippingCoefficient
              ySlippingCoefficient:(CGFloat)ySlippingCoefficient
@@ -54,10 +55,10 @@
     
     UIImageView *imageView = [[UIImageView alloc] initWithImage:resizedImage];
     
-    CGFloat postionX = (SCREEN_WIDTH - resizedImage.size.width) / 2;
-    CGFloat postionY = (SCREEN_HEIGHT - [PRLElementView skipViewHeight] - resizedImage.size.height) / 2;
+    CGFloat postionX = (size.width - resizedImage.size.width) / 2;
+    CGFloat postionY = (size.height - [PRLElementView skipViewHeight:size.height] - resizedImage.size.height) / 2;
     
-    if (self = [super initWithFrame:CGRectMake(postionX + offsetX * scaleCoefficient + SCREEN_WIDTH * xSlippingCoefficient * pageNumber,
+    if (self = [super initWithFrame:CGRectMake(postionX + offsetX * scaleCoefficient + size.width * xSlippingCoefficient * pageNumber,
                                                postionY + offsetY * scaleCoefficient,
                                                resizedImage.size.width,
                                                resizedImage.size.height)]) {
@@ -84,6 +85,7 @@
                         color:(UIColor *)color
                       offsetX:(CGFloat)offsetX
                       offsetY:(CGFloat)offsetY
+                         size:(CGSize) size
                    pageNumber:(NSInteger)pageNumber
          xSlippingCoefficient:(CGFloat)xSlippingCoefficient
          ySlippingCoefficient:(CGFloat)ySlippingCoefficient
@@ -96,13 +98,13 @@
         }
         return nil;
     }
-    CGRect rect = [title boundingRectWithSize:CGSizeMake(SCREEN_WIDTH, CGFLOAT_MAX)
+    CGRect rect = [title boundingRectWithSize:CGSizeMake(size.width, CGFLOAT_MAX)
                                       options:NSStringDrawingUsesLineFragmentOrigin
                                    attributes:@{NSFontAttributeName: font}
                                       context:nil];
     CGSize destinationSize = rect.size;
-    CGFloat postionX = (SCREEN_WIDTH - destinationSize.width) / 2;
-    CGFloat postionY = (SCREEN_HEIGHT - [PRLElementView skipViewHeight] - destinationSize.height) / 2;
+    CGFloat postionX = (size.width - destinationSize.width) / 2;
+    CGFloat postionY = (size.height - [PRLElementView skipViewHeight:size.height] - destinationSize.height) / 2;
     
     UILabel *label = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, destinationSize.width, destinationSize.height)];
     label.text = title;
@@ -112,7 +114,7 @@
     label.textAlignment = NSTextAlignmentCenter;
     label.lineBreakMode = NSLineBreakByWordWrapping;
     
-    if (self = [super initWithFrame:CGRectMake(postionX + offsetX * scaleCoefficient + SCREEN_WIDTH * xSlippingCoefficient * pageNumber,
+    if (self = [super initWithFrame:CGRectMake(postionX + offsetX * scaleCoefficient + size.width * xSlippingCoefficient * pageNumber,
                                                postionY + offsetY * scaleCoefficient,
                                                destinationSize.width,
                                                destinationSize.height)]) {
@@ -135,8 +137,8 @@
     return self;
 }
 
-+ (CGFloat) skipViewHeight {
-    return UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad ? 60.f : 40.f;
++ (CGFloat) skipViewHeight:(CGFloat) viewHeight {
+    return viewHeight > 480 ? 60.f : 40.f;
 }
 
 @end
