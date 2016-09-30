@@ -67,8 +67,8 @@
         }
         return nil;
     }
-    
-    if ((self = [super initWithFrame:[UIScreen mainScreen].bounds])) {
+    CGRect rect = CGRectMake(0, 0, size.width, size.height);
+    if ((self = [super initWithFrame:rect])) {
         self.clipsToBounds = YES;
         self.showBottomPanel = YES;
         self.autoscrollTime = 4;
@@ -80,7 +80,7 @@
         self.lastScreenWidth = 0;
         self.scaleCoefficient = scaleCoefficient;
         
-        self.scrollView = [[UIScrollView alloc] initWithFrame:CGRectMake(0, 0, size.width, size.height)];
+        self.scrollView = [[UIScrollView alloc] initWithFrame:self.bounds];
         self.scrollView.delegate = self;
         self.scrollView.pagingEnabled = YES;
         [self.scrollView setContentSize:CGSizeMake(size.width * pageCount, size.height)];
