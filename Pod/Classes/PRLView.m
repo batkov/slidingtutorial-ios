@@ -8,6 +8,7 @@
 
 #import "PRLView.h"
 #import "PRLElementView.h"
+#import "UIView+AutoLayout.h"
 #import <QuartzCore/QuartzCore.h>
 
 @interface PRLView () <UIScrollViewDelegate>
@@ -84,7 +85,9 @@
         self.scrollView.delegate = self;
         self.scrollView.pagingEnabled = YES;
         [self.scrollView setContentSize:CGSizeMake(size.width * pageCount, size.height)];
+        self.scrollView.translatesAutoresizingMaskIntoConstraints = NO;
         [self addSubview:self.scrollView];
+        [self.scrollView pinToSuperviewEdgesWithInset:UIEdgeInsetsZero];
         
         for (int i = 0; i < pageCount; i++) {
             UIView *view = [[UIView alloc] initWithFrame:CGRectMake(size.width * i, 0, size.width, size.height - [PRLElementView skipViewHeight:size.height])];

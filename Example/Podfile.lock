@@ -1,13 +1,9 @@
 PODS:
-  - FBSnapshotTestCase (2.0.7):
-    - FBSnapshotTestCase/SwiftSupport (= 2.0.7)
-  - FBSnapshotTestCase/Core (2.0.7)
-  - FBSnapshotTestCase/SwiftSupport (2.0.7):
-    - FBSnapshotTestCase/Core
-  - SlidingTutorial (0.9.0)
+  - SlidingTutorial (0.9.0):
+    - UIView-Autolayout
+  - UIView-Autolayout (0.2.1)
 
 DEPENDENCIES:
-  - FBSnapshotTestCase
   - SlidingTutorial (from `../`)
 
 EXTERNAL SOURCES:
@@ -15,7 +11,9 @@ EXTERNAL SOURCES:
     :path: ../
 
 SPEC CHECKSUMS:
-  FBSnapshotTestCase: 7e85180d0d141a0cf472352edda7e80d7eaeb547
-  SlidingTutorial: f34288d8a2c5839270ff739459d113de094abd2b
+  SlidingTutorial: a247016e9cd13ec22981c97b4366eeb526c19d78
+  UIView-Autolayout: 042510c499403f58620998278ddd60fa7b6cd4a7
 
-COCOAPODS: 0.39.0
+PODFILE CHECKSUM: 4ba56419ca6a520082e01cdadb24e0095ca65b10
+
+COCOAPODS: 1.2.0

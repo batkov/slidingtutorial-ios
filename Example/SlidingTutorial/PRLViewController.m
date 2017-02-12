@@ -8,6 +8,7 @@
 
 #import "PRLViewController.h"
 #import "PRLView.h"
+#import "UIView+AutoLayout.h"
 
 @interface PRLViewController () <UIScrollViewDelegate, PRLViewProtocol>
 
@@ -51,7 +52,9 @@
     PRLView *viewParallax = [[PRLView alloc] initWithPageCount:4 scaleCoefficient:0.8 size:self.view.frame.size];
     viewParallax.delegate = self;
     self.viewParallax = viewParallax;
+    viewParallax.translatesAutoresizingMaskIntoConstraints = NO;
     [self.view addSubview:viewParallax];
+    [viewParallax pinToSuperviewEdgesWithInset:UIEdgeInsetsZero];
     
     [viewParallax addBackgroundColor:[UIColor colorWithRed:231./255 green:150./255 blue:0 alpha:1]];
     [viewParallax addBackgroundColor:[UIColor colorWithRed:163./255 green:181./255 blue:0 alpha:1]];
